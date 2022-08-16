@@ -1,6 +1,8 @@
 # Projeto-4Bits
 Projeto em Prática Profissional em Análise e Desenvolvimento de Sistemas
 Grupo:
-Thiago Gonçalves Coura
+Gabriel
+Luana Theodoro
 Macsuel Dias Soares
 Maisa Enide Fernandes
+Thiago Gonçalves Coura
