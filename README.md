@@ -1,8 +1,14 @@
 # Projeto-4Bits
-Projeto em Prática Profissional em Análise e Desenvolvimento de Sistemas
-Grupo:
-Gabriel
+Prática Profissional em Análise e Desenvolvimento de Sistemas
+<br><br>
+Dados dos alunos:
+<br>
+Gabriel Rodrigues
+<br>
 Luana Theodoro
+<br>
 Macsuel Dias Soares
+<br>
 Maisa Enide Fernandes
+<br>
 Thiago Gonçalves Coura
