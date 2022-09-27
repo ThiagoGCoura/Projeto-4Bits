@@ -1,0 +1,111 @@
+*{
+	font-family: 'Roboto', sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+#container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background-color: #28584D;
+}
+
+.cabecalho {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin:  30px auto 60px;
+
+}
+
+.cabecalho h1 {
+	color: white;
+	font-size: 35px;
+	margin-block:  15px;
+}
+
+.cabecalho h2 {
+	color: white;
+	font-size: 15px;
+}
+
+main {
+	width: 100%;
+}
+
+.titulo_formulario {
+	margin-bottom: 20px;
+}
+
+.borda_inferior {
+	border-bottom: 1px #98A5A2 solid;
+	width: 250px;
+	margin-bottom: 30px;
+	display: block;
+}
+
+main {
+	flex: 1;
+}
+
+.formulario_login {
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: #DCDCDC;
+	width:  410px;
+	height: 300px;
+	border-radius: 14px;
+	box-shadow: 3px 3px 3px 0px rgba(186,186,186,0.75);
+}
+
+.formulario {
+	display:  flex;
+	flex-direction: column;
+}
+
+.formulario input {
+	border-radius: 12px;
+	margin-block: 10px;
+	border: none;
+	outline:  none;
+	padding: 5px 12px ;
+}
+
+.formulario input placeholder {
+	margin-left: 12px;
+}
+
+
+.formulario button {
+	margin-top:  30px;
+}
+
+.btn {
+	background: #18352E;
+	color:  white;
+	border-radius: 6px;
+	padding:  4px;
+	font-size: 14px;
+	width: 100px;
+	border:  none;
+	margin-inline:  auto;
+}
+
+.rodape {
+	display: flex;
+	justify-content: center;
+	height: 50px;
+	background: #DCDCDC;
+}
+
+.rodape p {
+	color:  white;
+	margin-bottom: 20px;
+	position:  absolute;
+}
