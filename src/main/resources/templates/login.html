@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang ="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Estacionamento</title>
+
+    <link th:href="@{/css/login.css}" rel="stylesheet" />
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+<div th:if="${param.error}">
+    Usuário ou senha inválidos.
+</div>
+<div th:if="${param.logout}">
+    Você saiu da conta.
+</div>
+<div id="container">
+    <header class="cabecalho">
+        <h1>GÁVIA</h1>
+        <h2>Estacionamento</h2>
+    </header>
+
+    <main>
+        <div class="formulario_login">
+            <div class="titulo_formulario">
+                <h2>Login</h2>
+            </div>
+            <span class="borda_inferior"></span>
+            <form class="formulario" th:action="@{/login}" method="post">
+                <input type = "text" name = "username" placeholder="Usuário" maxlength="20" size="30" required/>
+                <input type = "password" name = "password" placeholder="Senha" required/>
+                <button class ="btn btn_formulario"type = "submit">Entrar</button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="rodape">
+        <p>Devenvolvido por: 4Bits</p>
+    </footer>
+</div>
+
+</body>
+</html>
