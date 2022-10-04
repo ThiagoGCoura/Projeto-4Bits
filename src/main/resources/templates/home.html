@@ -7,6 +7,14 @@
 <h1 th:inline="text">Bem Vindo [[${#httpServletRequest.remoteUser}]]!</h1>
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Sair"/>
+
 </form>
+<p id="vagas"></p>
+
+<script>
+   fetch('/vagas')
+    .then((response) => response.json())
+    .then((data) => document.getElementById("vagas").innerHTML = JSON.stringify(data));
+</script>
 </body>
 </html>
