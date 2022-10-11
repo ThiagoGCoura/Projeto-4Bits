@@ -6,6 +6,8 @@ spring:
       ddl-auto: validate
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+  liquibase:
+    change-log: db/changelog/changelog.sql
 
 ---
 
