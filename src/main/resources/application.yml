@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+---
+
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/estacionamento
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:secret}
