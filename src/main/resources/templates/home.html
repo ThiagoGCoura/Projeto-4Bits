@@ -1,20 +1,75 @@
 <!DOCTYPE html>
 <html lang ="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
-<head>
+	<head>
+		<meta charset="UTF-8">
+		<title>Estacionamento</title>
 
-    <meta charset="UTF-8">
-<body>
-<h1 th:inline="text">Bem Vindo [[${#httpServletRequest.remoteUser}]]!</h1>
-<form th:action="@{/logout}" method="post">
-    <input type="submit" value="Sair"/>
+		<link th:href="@{/css/home.css}" rel="stylesheet" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	</head>
 
-</form>
-<p id="vagas"></p>
+	<body onload="pegaTexto()">
+		<div id="container">
+			<header class="cabecalho">
+                <div>
+                    <h1>Painel de Vagas</h1>
+                </div>
+                <div>
+					<form th:action="@{/logout}" method="post">
+                    <p class="user">
+						Usuario: <span class="user-logon">[[${#httpServletRequest.remoteUser}]]</span>
+						<input type="submit" class="btn-logout" value="(sair)"/>
+					</p>
+					</form>
+                </div>
+			</header>
+            <form action="" method=""  class="form-search">
+                <input class="board-car" type="text" placeholder="Placa do Veiculo para pesquisar" name="veiculo-pesquisar" size="40">
 
-<script>
-   fetch('/vagas')
-    .then((response) => response.json())
-    .then((data) => document.getElementById("vagas").innerHTML = JSON.stringify(data));
-</script>
-</body>
+				<a class="search-car" href="" onclick="searchCar()">
+					<span class="icon-search" >
+						<i class="fa fa-magnifying-glass"></i>
+					</span>
+				</a>
+
+            </form>
+			<main>
+				<div class="vacancy-list">
+					<ul class="list-title-set">
+						<li class="title-list title-status">Status</li>
+						<li class="title-list title-vacancy ">Vagas</li>
+						<li class="title-list title-board">Placa</li>
+						<li class="title-list title-model">Modelo</li>
+						<li class="title-list title-brand">Marca</li>
+						<li class="title-list title-color">Cor</li>
+						<li class="title-list title-type">Tipo</li>
+						<li class="title-list title-name">Proprietario</li>
+						<li class="title-list title-cpf">CPF</li>
+						<li class="title-list title-phone">Telefone</li>
+						<li class="title-list title-plan">Plano</li>
+						<li class="title-list title-expiration">Expiração</li>
+						<li class="title-list title-action"></li>
+					</ul>
+					<div>
+						<ul class="list-item-set">
+						</ul>
+					</div>
+				</div>
+			</main>
+
+			<footer class="rodape">
+				<p id="aaa">Devenvolvido por: 4Bits</p>
+			</footer>
+		</div>
+	</body>
+	<script th:src="@{/js/home.js}"></script>
+	<script>
+	   fetch('/vagas')
+		.then((response) => response.json())
+		.then((data) => console.log(JSON.stringify(data)));
+	</script>
 </html>
+
