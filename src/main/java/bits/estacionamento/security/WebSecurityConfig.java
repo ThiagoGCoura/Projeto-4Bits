@@ -1,5 +1,7 @@
 package bits.estacionamento.security;
 
+import javax.sql.DataSource;
+
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,37 +11,32 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http
-			.authorizeHttpRequests((requests) -> requests
-					.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-				.anyRequest().authenticated()
-			)
-			.formLogin((form) -> form
-				.loginPage("/login")
-				.permitAll()
-			)
-			.logout((logout) -> logout.permitAll());
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .authorizeHttpRequests((requests) -> requests
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+            .anyRequest().authenticated()
+        )
+        .formLogin((form) -> form
+            .loginPage("/login")
+            .permitAll()
+        )
+        .logout((logout) -> logout.permitAll());
 
-		return http.build();
-	}
+    return http.build();
+  }
 
-	@Bean
-	public UserDetailsService userDetailsService() {
-		UserDetails user =
-			 User.withDefaultPasswordEncoder()
-				.username("usuario")
-				.password("senha")
-				.roles("USER")
-				.build();
-
-		return new InMemoryUserDetailsManager(user);
-	}
+  @Bean
+  UserDetailsManager users(DataSource dataSource) {
+    return new JdbcUserDetailsManager(dataSource);
+  }
 }
