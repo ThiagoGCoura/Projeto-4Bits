@@ -1,0 +1,290 @@
+*{
+	font-family: 'Roboto', sans-serif;
+	margin: 0;
+	padding: 0;
+	font-weight: 500;
+	box-sizing: border-box;
+}
+
+body {
+	background: #28584D;
+}
+
+#container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	margin-top: 30px;
+}
+
+.cabecalho {
+	display: flex;
+	align-items: center;
+    justify-content: space-between;
+    width: 95%;
+	margin: 30px;
+}
+
+.user {
+    background: #6F928D;
+    padding: 14px;
+    border-radius: 24px;
+    color: #fff;
+}
+
+.user-logon::after  {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-left: 12px;
+    border-radius: 50%;
+    background: #2aca2a
+}
+
+.form-search {
+	width: 90%;
+	display: flex;
+	justify-content: flex-end;
+	margin-block: 30px	;
+}
+
+.form-search input {
+    padding: 8px;
+    margin: 0;
+    border: 1px solid #AAA;
+    border-radius: 18px 0 0 18px;
+    background: #28584D;
+    color: #AAA;
+}
+
+.form-search input:focus-visible {
+    outline: none;
+}
+
+.fa-magnifying-glass{
+	transform: rotate(90deg);
+}
+
+
+::-webkit-input-placeholder {
+    color: #AAA;
+ }
+
+ .search-car {
+	position: relative;
+ }
+
+.icon-search {
+	position: absolute;
+    background: #fff;
+    border-radius: 0 18px 18px 0;
+    padding: 7px;
+    border: none;
+}
+
+
+.vacancy-list {
+	margin: 10px
+}
+
+.list-title-set {
+	display: flex;
+	list-style: none;
+	justify-content: space-between;
+	background: #6F928D;
+	padding: 14px 6px;
+	border-radius: 12px 12px 0 0;
+}
+
+.title-list {
+	color: #fff;
+	width: 100%;
+	text-align: center;
+}
+
+.list-item-set {
+	display: flex;
+	flex-direction: column;
+	list-style: none;
+	justify-content: space-between;
+	height: 600px;
+	overflow-y: auto;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #F4F4F4;
+}
+::-webkit-scrollbar {
+    width: 10px;
+    background: #F4F4F4;
+}
+::-webkit-scrollbar-thumb {
+    background: #6F928D;
+	border-radius: 5px;
+}
+
+.list-item-set .active {
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background: #2aca2a;
+}
+
+.data-vacancy {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: #333;
+	padding: 12px 6px;
+	font-size: 13px;
+}
+
+.data-vacancy:nth-child(odd) {
+	background-color: #e1e1e1;
+}
+
+.data-vacancy:nth-child(even) {
+	background-color: #f1f1f1;
+}
+
+.item-list .empty{
+	width: 12px;
+	height: 12px;
+	display: block;
+	background: #FF0000;
+	border-radius: 50%;
+	margin: auto;
+}
+
+.item-status, .title-status,
+.item-vacancy, .title-vacancy,
+.item-color, .title-color,
+.item-brand, .title-brand {
+	max-width: 100px;
+}
+
+.item-name, .title-name,
+.item-plan, .title-plan,
+.item-board, .title-board,
+.item-type, .title-type,
+.item-model, .title-model,
+.item-cpf, .title-cpf,
+.item-phone, .title-phone,
+.item-expiration, .title-expiration{
+	max-width: 100%;
+}
+
+
+
+
+.item-list .busy{
+	width: 12px;
+	height: 12px;
+	display: block;
+	background: #2aca2a;
+	border-radius: 50%;
+	margin: auto;
+}
+
+.item-list {
+	width: 100%;
+	text-align: center;
+}
+
+.item-plan {
+	border-radius: 10px;
+    outline: none;
+    border: none;
+	padding-block: 4px;
+}
+
+.item-expiration .end-date {
+	color: #991111;
+	background: #FDD1D6;
+	padding: 6px;
+	margin-inline: 10px;
+	border-radius: 4px;
+}
+
+.cabecalho h1 {
+	color: white;
+	font-size: 35px;
+	margin-block:  15px;
+}
+
+.cabecalho h2 {
+	color: white;
+	font-size: 15px;
+}
+
+.btn {
+	background: #18352E;
+	color:  white;
+	border-radius: 6px;
+	padding:  4px;
+	font-size: 14px;
+	width: 80px;
+	border:  none;
+	margin-inline:  auto;
+	cursor: pointer;
+}
+
+.btn.btn-add {
+	background: #A7F4AF;
+	color: #007119;
+}
+
+.btn.btn-close {
+	background: #C7EAFD;
+	color: #174A86;
+}
+
+.vacancy-list input {
+	border: none;
+	outline: none;
+	margin-inline: 4px;
+	padding: 4px 0;
+	border-radius: 4px;
+}
+
+
+
+main {
+	width: 100%;
+}
+
+
+
+main {
+	flex: 1;
+}
+
+.rodape {
+	display: flex;
+	justify-content: center;
+	height: 50px;
+	background: #DCDCDC;
+}
+
+.rodape p {
+	color:  white;
+	margin-bottom: 20px;
+	position:  absolute;
+}
+
+.cabecalho {
+	display: flex;
+	justify-content: space-between;
+}
+
+.btn-logout {
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: white;
+    text-decoration: underline;
+}
