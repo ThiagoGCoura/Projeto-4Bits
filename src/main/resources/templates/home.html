@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	</head>
 
-	<body onload="pegaTexto()">
+	<body onload="showVacancy()">
 		<div id="container">
 			<header class="cabecalho">
                 <div>
@@ -61,15 +61,26 @@
 			</main>
 
 			<footer class="rodape">
-				<p id="aaa">Devenvolvido por: 4Bits</p>
+				<p>Devenvolvido por: 4Bits</p>
 			</footer>
 		</div>
 	</body>
-	<script th:src="@{/js/home.js}"></script>
+	<script th:src="@{/js/script.js}"></script>
 	<script>
-	   fetch('/vagas')
-		.then((response) => response.json())
-		.then((data) => console.log(JSON.stringify(data)));
+		async function showVacancy() {
+			await fetch('/vagas')
+				.then((response) => response.json())
+				.then((data) => {
+					if("[[${#httpServletRequest.remoteUser}]]" == "atendente") {
+						userAtendente(data)
+					} else {
+						userGerente(data)
+					};
+				});
+		}
+
+
+
 	</script>
 </html>
 

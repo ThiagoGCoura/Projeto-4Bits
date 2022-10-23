@@ -53,13 +53,13 @@ main {
 
 .formulario_login {
 	margin: auto;
+	padding-block: 30px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	background-color: #DCDCDC;
 	width:  410px;
-	height: 300px;
 	border-radius: 14px;
 	box-shadow: 3px 3px 3px 0px rgba(186,186,186,0.75);
 }
@@ -75,6 +75,12 @@ main {
 	border: none;
 	outline:  none;
 	padding: 5px 12px ;
+	width: 200px;
+}
+
+.formulario .input-password {
+	border-radius: 12px 0 0 12px;
+	width: 172px;
 }
 
 .formulario input placeholder {
