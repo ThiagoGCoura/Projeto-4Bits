@@ -16,32 +16,31 @@ body {
 	justify-content: center;
 	align-items: center;
 	height: 100%;
-	margin-top: 30px;
 }
 
 .cabecalho {
 	display: flex;
 	align-items: center;
-    justify-content: space-between;
-    width: 95%;
+	justify-content: space-between;
+	width: 95%;
 	margin: 30px;
 }
 
 .user {
-    background: #6F928D;
-    padding: 14px;
-    border-radius: 24px;
-    color: #fff;
+	background: #6F928D;
+	padding: 14px;
+	border-radius: 24px;
+	color: #fff;
 }
 
 .user-logon::after  {
-    content: "";
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    margin-left: 12px;
-    border-radius: 50%;
-    background: #2aca2a
+	content: "";
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	margin-left: 12px;
+	border-radius: 50%;
+	background: #2aca2a
 }
 
 .form-search {
@@ -52,16 +51,16 @@ body {
 }
 
 .form-search input {
-    padding: 8px;
-    margin: 0;
-    border: 1px solid #AAA;
-    border-radius: 18px 0 0 18px;
-    background: #28584D;
-    color: #AAA;
+	padding: 8px;
+	margin: 0;
+	border: 1px solid #AAA;
+	border-radius: 18px 0 0 18px;
+	background: #28584D;
+	color: #AAA;
 }
 
 .form-search input:focus-visible {
-    outline: none;
+	outline: none;
 }
 
 .fa-magnifying-glass{
@@ -70,19 +69,19 @@ body {
 
 
 ::-webkit-input-placeholder {
-    color: #AAA;
- }
+	color: #AAA;
+}
 
- .search-car {
+.search-car {
 	position: relative;
- }
+}
 
 .icon-search {
 	position: absolute;
-    background: #fff;
-    border-radius: 0 18px 18px 0;
-    padding: 7px;
-    border: none;
+	background: #fff;
+	border-radius: 0 18px 18px 0;
+	padding: 7px;
+	border: none;
 }
 
 
@@ -114,15 +113,19 @@ body {
 	overflow-y: auto;
 }
 
+.avulso{
+	display: none;
+}
+
 ::-webkit-scrollbar-track {
-    background-color: #F4F4F4;
+	background-color: #F4F4F4;
 }
 ::-webkit-scrollbar {
-    width: 10px;
-    background: #F4F4F4;
+	width: 10px;
+	background: #F4F4F4;
 }
 ::-webkit-scrollbar-thumb {
-    background: #6F928D;
+	background: #6F928D;
 	border-radius: 5px;
 }
 
@@ -195,19 +198,33 @@ body {
 	text-align: center;
 }
 
-.item-plan {
+.item-plan, .item-type {
 	border-radius: 10px;
-    outline: none;
-    border: none;
+	outline: none;
+	border: none;
 	padding-block: 4px;
 }
 
-.item-expiration .end-date {
-	color: #991111;
-	background: #FDD1D6;
+span.end-date {
+	color: #174A86;
+	background: #C7EAFD;
 	padding: 6px;
 	margin-inline: 10px;
 	border-radius: 4px;
+}
+
+.end-date#expired {
+	color: #991111;
+	background: #FDD1D6;
+}
+
+
+
+input.end-date{
+	width: 100px;
+	text-align: center;
+	background: #C7EAFD;
+	color: #174A86;
 }
 
 .cabecalho h1 {
@@ -238,6 +255,11 @@ body {
 	color: #007119;
 }
 
+.btn.btn-add#missing-payment {
+	background: #cfcfcf;
+	color: #8F8F8F;
+}
+
 .btn.btn-close {
 	background: #C7EAFD;
 	color: #174A86;
@@ -263,6 +285,10 @@ main {
 	flex: 1;
 }
 
+
+
+
+
 .rodape {
 	display: flex;
 	justify-content: center;
@@ -274,17 +300,4 @@ main {
 	color:  white;
 	margin-bottom: 20px;
 	position:  absolute;
-}
-
-.cabecalho {
-	display: flex;
-	justify-content: space-between;
-}
-
-.btn-logout {
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: white;
-    text-decoration: underline;
 }

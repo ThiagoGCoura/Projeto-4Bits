@@ -1,4 +1,4 @@
-package bits.estacionamento.beans;
+package bits.estacionamento.entity;
 
 public enum TipoVeiculo {
     CARRO, MOTOCICLETA
