@@ -1,0 +1,140 @@
+*{
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #28584D;
+}
+
+.cabecalho {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin:  30px auto 60px;
+}
+
+.cabecalho h1 {
+    color: white;
+    font-size: 35px;
+    margin-block:  15px;
+}
+
+.cabecalho h2 {
+    color: white;
+    font-size: 15px;
+}
+
+main {
+    width: 100%;
+}
+
+.titulo_formulario {
+    margin-bottom: 20px;
+}
+
+.borda_inferior {
+    border-bottom: 1px #98A5A2 solid;
+    width: 250px;
+    margin-bottom: 30px;
+    display: block;
+}
+
+main {
+    flex: 1;
+}
+
+.formulario_login {
+    margin: auto;
+    padding-block: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #DCDCDC;
+    width:  480px;
+    border-radius: 14px;
+    box-shadow: 3px 3px 3px 0px rgba(186,186,186,0.75);
+}
+
+.formulario {
+    display:  flex;
+    flex-direction: column;
+}
+
+.formulario span {
+    display: inline-block;
+    width: 200px;
+    height: 22px;
+    border-radius: 3px;
+    border: none;
+    outline:  none;
+    padding: 0 12px ;
+    background: #f7f1f1;
+}
+
+.data_ending {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+}
+
+.formulario label {
+    display: inline-block;
+    width: 140px;
+    font-weight: 500;
+}
+
+.formulario .input-password {
+    border-radius: 12px 0 0 12px;
+    width: 172px;
+}
+
+.formulario .eye:after {
+    display: inline-block;
+    padding-inline: 4px;
+    width: 20px;
+    height: 24px;
+    background: #aaa;
+    content: "👁" ;
+    border-radius: 0 12px 12px 0;
+    cursor: pointer;
+}
+
+.formulario input placeholder {
+    margin-left: 12px;
+}
+
+
+.formulario button {
+    margin-top:  30px;
+}
+
+.btn {
+    background: #18352E;
+    color:  white;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border:  none;
+    margin-inline:  auto;
+}
+
+.rodape {
+    display: flex;
+    justify-content: center;
+    height: 50px;
+    background: #DCDCDC;
+}
+
+.rodape p {
+    color:  white;
+    margin-bottom: 20px;
+    position:  absolute;
+}

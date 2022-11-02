@@ -1,133 +1,133 @@
 <!DOCTYPE html>
 <html lang ="pt-br">
-	<head>
-		<meta charset="UTF-8">
-		<title>Estacionamento</title>
-		<link rel="stylesheet" href="./css/ending-plan.css">
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"> 
-	</head>
+<head>
+	<meta charset="UTF-8">
+	<title>Estacionamento</title>
+	<link rel="stylesheet" href="./css/ending-plan.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
 
-	<body onload="showDataVacancy()">
-		<div id="container">
-			<header class="cabecalho">
-				<h1>GÁVIA</h1>
-				<h2>Estacionamento</h2>
-			</header>
-	
-			<main>
-				<div class="formulario_login">
-					<div class="titulo_formulario">
-						<h2>Cadastro</h2>
-					</div>
-					<span class="borda_inferior"></span>
-					<form class="formulario" method = "post" action="">
-						<div class="data_ending">
-							<label>Nome do Cliente</label>
-							<span id="name_client"></span>
-						</div>
-						<div class="data_ending">
-							<label for="">Placa do Veículo</label>
-							<span id="board"></span>
-						</div>
-						<div class="data_ending">
-							<label>Data Entrada</label>
-							<span id="date_entry"></span>
-						</div>
-						<div class="data_ending">
-							<label for="">Data Expiração</label>
-							<span id="date_expiration"></span>
-						</div>
-						<div class="data_ending">
-							<label>Valor</label>
-							<span id="amount"></span>
-						</div>
-						<button class ="btn btn_formulario" type = "submit">Confirmar Pagamento</button>
-					</form>
+<body onload="showDataVacancy()">
+<div id="container">
+	<header class="cabecalho">
+		<h1>GÁVIA</h1>
+		<h2>Estacionamento</h2>
+	</header>
+
+	<main>
+		<div class="formulario_login">
+			<div class="titulo_formulario">
+				<h2>Pagamento Mensalista</h2>
+			</div>
+			<span class="borda_inferior"></span>
+			<form class="formulario" method = "post" action="">
+				<div class="data_ending">
+					<label>Nome do Cliente</label>
+					<span id="name_client"></span>
 				</div>
-			</main>
-	
-			<footer class="rodape">
-				<p>Devenvolvido por: 4Bits</p>
-			</footer>
+				<div class="data_ending">
+					<label for="">Placa do Veículo</label>
+					<span id="board"></span>
+				</div>
+				<div class="data_ending">
+					<label>Data Entrada</label>
+					<span id="date_entry"></span>
+				</div>
+				<div class="data_ending">
+					<label for="">Data Saída</label>
+					<span id="date_expiration"></span>
+				</div>
+				<div class="data_ending">
+					<label>Valor</label>
+					<span id="amount"></span>
+				</div>
+				<button class ="btn btn_formulario" type = "submit">Confirmar Pagamento</button>
+			</form>
 		</div>
+	</main>
 
-        <script>
-			const data = [{
-				numero: "1",
-				estadia: {
-					entrada: "2022-10-08T17:19:00",
-					saida: "2022-10-18T17:19:00",
-					cliente: {
-						nome: "Laercio Pereira",
-						cpf: "12345678901",
-						telefone: "11988888087",
-						veiculo: {
-							marca: "Audi",
-							modelo: null,
-							cor: "Azul",
-							placa: "AAD-$4T44",
-							tipo: "Automovel",
-						},
-					},
+	<footer class="rodape">
+		<p>Devenvolvido por: 4Bits</p>
+	</footer>
+</div>
+
+<script>
+	const data = [{
+		numero: "1",
+		estadia: {
+			entrada: "2022-10-08T17:19:00",
+			saida: "2022-10-18T17:19:00",
+			cliente: {
+				nome: "Laercio Pereira",
+				cpf: "12345678901",
+				telefone: "11988888087",
+				veiculo: {
+					marca: "Audi",
+					modelo: null,
+					cor: "Azul",
+					placa: "AAD-$4T44",
+					tipo: "Automovel",
 				},
-			} ];
+			},
+		},
+	} ];
 
-			function showDataVacancy() {
-				console.log("teste")
-				data.map((elem, index) => {
-					const name_client = document.getElementById("name_client")
-					const board = document.getElementById("board")
-					const date_entry = document.getElementById("date_entry")
-					const date_expiration = document.getElementById("date_expiration")
-					const amount = document.getElementById("amount")
-					
-					const client = elem.estadia.cliente
-					const car = client.veiculo
-					
-					//formata a data de entrada
-					let date_entry_car = String(elem.estadia.entrada).split("T", 3);
-					let date_entry_separator = date_entry_car[0].split("-");
-					let day_entry = date_entry_separator[2];
-					let month_entry = date_entry_separator[1];
-					let year_entry = date_entry_separator[0];
-					let dateFormat_entry = `${day_entry}/${month_entry}/${year_entry}`;
-					
-					//formata a data de saida
-					let date_exit_car = String(elem.estadia.saida).split("T", 3);
-					let date_exit_separator = date_exit_car[0].split("-");
-					let day_exit = date_exit_separator[2];
-					let month_exit = date_exit_separator[1];
-					let year_exit = date_exit_separator[0];
-					let dateFormat_exit = `${day_exit}/${month_exit}/${year_exit}`;
-					console.log(dateFormat_entry)
+	function showDataVacancy() {
+		console.log("teste")
+		data.map((elem, index) => {
+			const name_client = document.getElementById("name_client")
+			const board = document.getElementById("board")
+			const date_entry = document.getElementById("date_entry")
+			const date_expiration = document.getElementById("date_expiration")
+			const amount = document.getElementById("amount")
 
-					let days_entry = new Date(dateFormat_entry.split('/').reverse().join('/'))
-					let days_exit = new Date(dateFormat_exit.split('/').reverse().join('/'))
-					let a = Math.abs(days_exit.getTime() - days_entry.getTime())
-					var diffDays = Math.round(a / (1000 * 3600 * 24)); 
-					
-					
+			const client = elem.estadia.cliente
+			const car = client.veiculo
 
-					name_client.innerHTML = client.nome
-					board.innerHTML = car.placa
-					date_entry.innerHTML = dateFormat_entry
-					date_expiration.innerHTML = dateFormat_exit
-					amount.innerHTML = `R$ ${diffDays * 8.66}`
-				})
-			}
+			//formata a data de entrada
+			let date_entry_car = String(elem.estadia.entrada).split("T", 3);
+			let date_entry_separator = date_entry_car[0].split("-");
+			let day_entry = date_entry_separator[2];
+			let month_entry = date_entry_separator[1];
+			let year_entry = date_entry_separator[0];
+			let dateFormat_entry = `${day_entry}/${month_entry}/${year_entry}`;
+
+			//formata a data de saida
+			let date_exit_car = String(elem.estadia.saida).split("T", 3);
+			let date_exit_separator = date_exit_car[0].split("-");
+			let day_exit = date_exit_separator[2];
+			let month_exit = date_exit_separator[1];
+			let year_exit = date_exit_separator[0];
+			let dateFormat_exit = `${day_exit}/${month_exit}/${year_exit}`;
+			console.log(dateFormat_entry)
+
+			let days_entry = new Date(dateFormat_entry.split('/').reverse().join('/'))
+			let days_exit = new Date(dateFormat_exit.split('/').reverse().join('/'))
+			let a = Math.abs(days_exit.getTime() - days_entry.getTime())
+			var diffDays = Math.round(a / (1000 * 3600 * 24));
 
 
-            function handleChangePlan() {
-               let type_plan = document.querySelector(".item-type-plan").value
-                if( type_plan == "mensal") {
-                    document.querySelector(".expiration-date").setAttribute("type", "date")
-                    document.querySelector(".expiration-date").setAttribute("placeholder", "Data da expiração do plano")
-                }else {
-                    document.querySelector(".expiration-date").setAttribute("type", "hidden")
-                }
-           }
-        </script>
-	</body>
+
+			name_client.innerHTML = client.nome
+			board.innerHTML = car.placa
+			date_entry.innerHTML = dateFormat_entry
+			date_expiration.innerHTML = dateFormat_exit
+			amount.innerHTML = `R$ ${diffDays * 8.66}`
+		})
+	}
+
+
+	function handleChangePlan() {
+		let type_plan = document.querySelector(".item-type-plan").value
+		if( type_plan == "mensal") {
+			document.querySelector(".expiration-date").setAttribute("type", "date")
+			document.querySelector(".expiration-date").setAttribute("placeholder", "Data da expiração do plano")
+		}else {
+			document.querySelector(".expiration-date").setAttribute("type", "hidden")
+		}
+	}
+</script>
+</body>
 </html>

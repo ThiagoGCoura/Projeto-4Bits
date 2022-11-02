@@ -8,7 +8,6 @@ function searchCar() {
 }
 
 function userAtendente(data) {
-    console.log(data)
     //pega o elemento ul para adicionar as vagas
     let vacancy_list = document.querySelector(".list-item-set");
     let date = new Date();
@@ -18,6 +17,10 @@ function userAtendente(data) {
         let client = elem.estadia.cliente;
         let car = client.veiculo;
         let board_car = car.placa;
+
+        //valida se tem data de saida
+        let exit_car =
+            elem.estadia.saida != null || elem.estadia.saida == "" ? true : false;
 
         //formata a data
         let exit_date = String(elem.estadia.saida).split("T", 3);
@@ -69,6 +72,7 @@ function userAtendente(data) {
         let expiration_date = document.createElement(input_data);
         let item_action = document.createElement("div");
         let btn_action = document.createElement("button");
+        let btn_payment = document.createElement("div");
 
         //add as classes nas tags
         item_vacancy.className = "item-list item-vacancy";
@@ -94,12 +98,23 @@ function userAtendente(data) {
         btn_action.className = `btn btn_action ${
             elem.estadia.cliente.veiculo.placa != "" ? "btn-add" : "btn-close"
         }`;
+        btn_payment.className = "item-list item-payment";
 
-        let com = new Date(dateFormat.split("/").reverse().join("/"));
-        let date = new Date();
-        if (date >= com) {
-            expiration_date.setAttribute("id", "expired");
+        if(!elem.estadia.pagamento && exit_car) {
+            expiration_date.setAttribute("id", "not_pay");
             btn_action.setAttribute("id", "missing-payment");
+            btn_action.setAttribute("disabled", "")
+            btn_action.setAttribute("title", "⚠️ Validar pagamento")
+            btn_action.style.cursor = "initial"
+        }
+
+        let not_pay = !elem.estadia.pagamento && board_car && exit_car
+        if(not_pay) {
+            let card_payment = document.createElement("a")
+            card_payment.className = "redirect_confirm_pay"
+            card_payment.innerHTML = '<i class="fa-regular fa-credit-card" ></i>'
+            btn_payment.appendChild(card_payment)
+            card_payment.setAttribute("href", `validate-payment-monthly.html?id=${board_car}`)
         }
 
         //add os conteudos nas tags
@@ -157,6 +172,7 @@ function userAtendente(data) {
         item_expiration.appendChild(expiration_date);
         content_item.appendChild(item_action);
         item_action.appendChild(btn_action);
+        content_item.appendChild(btn_payment);
 
         //cria as opçoes de tipo de veiculo
         let motorcycle = document.createElement("option");
@@ -348,6 +364,8 @@ function userGerente(data) {
         let expiration_date = document.createElement(input_data);
         let item_action = document.createElement("div");
         let btn_action = document.createElement("button");
+        let btn_payment = document.createElement("div");
+
 
         //add as classes nas tags
         item_vacancy.className = "item-list item-vacancy";
@@ -369,15 +387,17 @@ function userGerente(data) {
                 : "end-date mensal"
         }`;
         item_action.className = "item-list item-action";
+        btn_payment.className = "item-list item-payment";
         btn_action.className = `btn btn_action ${
             elem.estadia.cliente.veiculo.placa != "" ? "btn-add" : "btn-close"
         }`;
 
-        let com = new Date(dateFormat.split('/').reverse().join('/'))
-        let date = new Date()
-        if(date >= com) {
-            expiration_date.setAttribute("id", "expired");
+        if(!elem.estadia.pagamento && exit_car) {
+            expiration_date.setAttribute("id", "not_pay");
             btn_action.setAttribute("id", "missing-payment");
+            btn_action.setAttribute("disabled", "");
+            btn_action.setAttribute("title", "⚠️ Validar pagamento")
+            btn_action.style.cursor = "initial";
         }
 
         //add os conteudos nas tags
@@ -431,6 +451,7 @@ function userGerente(data) {
         item_expiration.appendChild(expiration_date);
         content_item.appendChild(item_action);
         item_action.appendChild(btn_action);
+        content_item.appendChild(btn_payment);
 
         //cria as opçoes de tipo de veiculo
         let motorcycle = document.createElement("option");
@@ -447,6 +468,17 @@ function userGerente(data) {
         carRide.innerHTML = "Automovel";
         pickup.innerHTML = "Caminhonete";
         utility.innerHTML = "Utilitario";
+
+        let not_pay = !elem.estadia.pagamento && board_car && exit_car
+        if(not_pay) {
+            let card_payment = document.createElement("a")
+            card_payment.className = "redirect_confirm_pay"
+            card_payment.innerHTML = '<i class="fa-regular fa-credit-card" ></i>'
+            btn_payment.appendChild(card_payment)
+            card_payment.setAttribute("href", `validate-payment-monthly.html?id=${board_car}`)
+            btn_action.setAttribute("disabled", "")
+            btn_action.style.cursor = "initial"
+        }
 
         //se vaga não possui placa cadastrada, add as opcões de plano no select e a função se houver mudança de plano
         plan_option.appendChild(plan_option_diary);
