@@ -15,6 +15,7 @@ function userAtendente(data) {
     data?.map((elem, index) => {
         //recebe a placa do veiculo(id)
         let client = elem.estadia.cliente;
+        let estadia = elem.estadia || {};
         let car = client.veiculo;
         let board_car = car.placa;
 
@@ -33,7 +34,7 @@ function userAtendente(data) {
         //cria a tag que irá todas a vagas
         let content_item = document.createElement("form");
         content_item.className = "data-vacancy";
-        content_item.setAttribute("action", "");
+        content_item.setAttribute("action", board_car ? `/estadias/${estadia.id}` : `/estadias`);
         content_item.setAttribute("method", "post");
 
         //cria a tag status
@@ -42,14 +43,14 @@ function userAtendente(data) {
 
         //cria a tag para de cor do status
         let color_status = document.createElement("span");
-        color_status.className = `${board_car != "" ? "empty" : "busy"}`;
+        color_status.className = `${board_car ? "empty" : "busy"}`;
 
         //add a tag status e cor
         content_item.appendChild(item_status);
         item_status.appendChild(color_status);
 
         //verificar o status
-        let vacancy_status = board_car === "" || board_car == null;
+        let vacancy_status = !board_car;
         let input_data = vacancy_status ? "input" : "span";
         let select_data = vacancy_status ? "select" : "span";
 
@@ -96,7 +97,7 @@ function userAtendente(data) {
         }`;
         item_action.className = "item-list item-action";
         btn_action.className = `btn btn_action ${
-            elem.estadia.cliente.veiculo.placa != "" ? "btn-add" : "btn-close"
+            elem.estadia.cliente.veiculo.placa ? "btn-add" : "btn-close"
         }`;
         btn_payment.className = "item-list item-payment";
 
@@ -139,9 +140,6 @@ function userAtendente(data) {
         btn_action.textContent = `${
             board_car != "" ? "Finalizar" : "Cadastrar"
         }`;
-
-        //atribui um id com o valor da placa para o campo placa
-        content_item.setAttribute("id", `${board_car}`);
 
         item_vacancy.setAttribute("name", "frm_vacancy");
         item_board.setAttribute("name", "frm_board");
@@ -304,17 +302,19 @@ function userGerente(data) {
     let vacancy_list = document.querySelector(".list-item-set");
 
     data.map((elem, index) => {
+        let vaga = elem;
+        let estadia = elem.estadia || {};
         //recebe a placa do veiculo(id)
-        let client = elem.estadia.cliente;
-        let car = client.veiculo;
+        let client = estadia.cliente || {};
+        let car = client.veiculo || {};
         let board_car = car.placa;
 
         //valida se tem data de saida
         let exit_car =
-            elem.estadia.saida != null || elem.estadia.saida == "" ? true : false;
+            estadia.saida != null || estadia.saida == "" ? true : false;
 
         //formata a data
-        let exit_date = String(elem.estadia.saida).split("T", 3);
+        let exit_date = String(estadia.saida).split("T", 3);
         let date2 = exit_date[0].split("-");
         let day = date2[2];
         let month = date2[1];
@@ -323,10 +323,11 @@ function userGerente(data) {
 
 
         //cria a tag que irá todas a vagas
-        let content_item = document.createElement("form");
-        content_item.className = "data-vacancy";
-        content_item.setAttribute("action", "");
-        content_item.setAttribute("method", "post");
+        let form = document.createElement("form");
+        form.className = "data-vacancy";
+        form.setAttribute("action", estadia.id ? `/estadias/${estadia.id}/encerrar` : "/estadias");
+        form.setAttribute("method", "post");
+        form.setAttribute("onsubmit", "submitForm(this); return false;");
 
         //cria a tag status
         let item_status = document.createElement("span");
@@ -334,14 +335,14 @@ function userGerente(data) {
 
         //cria a tag para de cor do status
         let color_status = document.createElement("span");
-        color_status.className = `${board_car != "" ? "empty" : "busy"}`;
+        color_status.className = `${board_car ? "empty" : "busy"}`;
 
         //add a tag status e cor
-        content_item.appendChild(item_status);
+        form.appendChild(item_status);
         item_status.appendChild(color_status);
 
         //verificar o status
-        let vacancy_status = board_car === "" || board_car == null;
+        let vacancy_status = !board_car;
         let input_data = "input";
         let select_data = "select";
 
@@ -366,7 +367,6 @@ function userGerente(data) {
         let btn_action = document.createElement("button");
         let btn_payment = document.createElement("div");
 
-
         //add as classes nas tags
         item_vacancy.className = "item-list item-vacancy";
         item_board.className = "item-list item-board";
@@ -389,10 +389,10 @@ function userGerente(data) {
         item_action.className = "item-list item-action";
         btn_payment.className = "item-list item-payment";
         btn_action.className = `btn btn_action ${
-            elem.estadia.cliente.veiculo.placa != "" ? "btn-add" : "btn-close"
+            car.placa != "" ? "btn-add" : "btn-close"
         }`;
 
-        if(!elem.estadia.pagamento && exit_car) {
+        if(!estadia.pagamento && exit_car) {
             expiration_date.setAttribute("id", "not_pay");
             btn_action.setAttribute("id", "missing-payment");
             btn_action.setAttribute("disabled", "");
@@ -402,25 +402,23 @@ function userGerente(data) {
 
         //add os conteudos nas tags
         item_status.innerHTML = "";
-        item_vacancy.innerHTML = elem.numero;
-        item_board.value = board_car;
-        item_model.value = car.modelo;
-        item_brand.value = car.marca;
-        item_color.value = car.cor;
-        item_type.value = car.tipo;
-        item_name.value = client.nome;
-        item_cpf.value = client.cpf;
-        item_phone.value = client.telefone;
-        plan_option.innerHTML = `${exit_car ? "Avulso" : "Mensal"}`;
+        item_vacancy.innerHTML = vaga.numero || "";
+        item_board.value = board_car || "";
+        item_model.value = car.modelo || "";
+        item_brand.value = car.marca || "";
+        item_color.value = car.cor || "";
+        item_type.value = car.tipo || "";
+        item_name.value = client.nome || "";
+        item_cpf.value = client.cpf || "";
+        item_phone.value = client.telefone || "";
+
+        plan_option.innerHTML = formatPlano(estadia.plano);
         plan_option_diary.innerHTML = "Avulso";
         plan_option_monthly.innerHTML = "Mensal";
         expiration_date.value = dateFormat;
         btn_action.textContent = `${
-            board_car != "" ? "Finalizar" : "Cadastrar"
+            board_car ? "Finalizar" : "Cadastrar"
         }`;
-
-        //atribui um id com o valor da placa para o campo placa
-        content_item.setAttribute("id", `${board_car}`);
 
         item_vacancy.setAttribute("name", "frm_vacancy")
         item_board.setAttribute("name", "frm_board")
@@ -435,23 +433,23 @@ function userGerente(data) {
         expiration_date.setAttribute("name", "frm_expiration")
 
         //add as tags
-        content_item.appendChild(item_status);
+        form.appendChild(item_status);
         item_status.appendChild(color_status);
-        content_item.appendChild(item_vacancy);
-        content_item.appendChild(item_board);
-        content_item.appendChild(item_model);
-        content_item.appendChild(item_brand);
-        content_item.appendChild(item_color);
-        content_item.appendChild(item_type);
-        content_item.appendChild(item_name);
-        content_item.appendChild(item_cpf);
-        content_item.appendChild(item_phone);
-        content_item.appendChild(plan_option);
-        content_item.appendChild(item_expiration);
+        form.appendChild(item_vacancy);
+        form.appendChild(item_board);
+        form.appendChild(item_model);
+        form.appendChild(item_brand);
+        form.appendChild(item_color);
+        form.appendChild(item_type);
+        form.appendChild(item_name);
+        form.appendChild(item_cpf);
+        form.appendChild(item_phone);
+        form.appendChild(plan_option);
+        form.appendChild(item_expiration);
         item_expiration.appendChild(expiration_date);
-        content_item.appendChild(item_action);
+        form.appendChild(item_action);
         item_action.appendChild(btn_action);
-        content_item.appendChild(btn_payment);
+        form.appendChild(btn_payment);
 
         //cria as opçoes de tipo de veiculo
         let motorcycle = document.createElement("option");
@@ -469,13 +467,13 @@ function userGerente(data) {
         pickup.innerHTML = "Caminhonete";
         utility.innerHTML = "Utilitario";
 
-        let not_pay = !elem.estadia.pagamento && board_car && exit_car
+        let not_pay = !estadia.pagamento && board_car && exit_car
         if(not_pay) {
             let card_payment = document.createElement("a")
             card_payment.className = "redirect_confirm_pay"
             card_payment.innerHTML = '<i class="fa-regular fa-credit-card" ></i>'
             btn_payment.appendChild(card_payment)
-            card_payment.setAttribute("href", `validate-payment-monthly.html?id=${board_car}`)
+            card_payment.setAttribute("href", `/pagamentos/novo?estadia_id=${estadia.id}`)
             btn_action.setAttribute("disabled", "")
             btn_action.style.cursor = "initial"
         }
@@ -486,9 +484,7 @@ function userGerente(data) {
         plan_option.setAttribute("onchange", `handleChangePlan(${index})`);
 
 
-
-
-        let type_car = elem.estadia.cliente.veiculo.tipo
+        let type_car = car.tipo
 
         switch (String(type_car)) {
             case "Utilitario":
@@ -515,10 +511,9 @@ function userGerente(data) {
 
 
         //add todos os itens
+        let content_item = document.createElement("li");
+        content_item.appendChild(form);
         vacancy_list.appendChild(content_item);
-
-
-
 
         item_color.setAttribute("type", "text");
 
@@ -542,19 +537,49 @@ function userGerente(data) {
         plan_option_monthly.setAttribute("name", "monthly");
         let type_plan = document.querySelector(".item-plan").value;
 
-        if (exit_car) {
-            plan_option_monthly.setAttribute("selected", "");
-        } else {
+        if (!exit_car) {
             expiration_date.setAttribute("type", "hidden");
             expiration_date.value = dateFormat;
         }
 
         let tag_expiration = document.querySelectorAll(".end-date")[index];
-
-        // plan_option_diary.setAttribute("selected", "")
-
         expiration_date.innerHTML = `${exit_car ? "" : dateFormat}`;
 
     });
 }
 
+async function submitForm(form) {
+    var token = document.getElementById('_csrf').content;
+    var header = document.getElementById('_csrf_header').content;
+
+    await fetch(form.getAttribute('action'), {
+        method: form.getAttribute('method'),
+        headers: {
+            'Content-Type': 'application/json',
+            'Accepts': 'application/json',
+            [header]: token
+        },
+        credentials: 'include',
+        body: JSON.stringify(getData(form))
+    })
+    .then((response) => response.json())
+    .then((estadia) => {
+      if(estadia.saida != null) {
+        location.href = `/pagamentos/novo?estadia_id=${estadia.id}`;
+      } else {
+        alert('TODO: tratar retorno da criação de estadias')
+      }
+    });
+}
+
+function getData(form) {
+  var formData = new FormData(form);
+  return Object.fromEntries(formData);
+}
+
+function formatPlano(plano) {
+    if (!plano) {
+        return "";
+    }
+    return plano[0].toUpperCase() + plano.slice(1).toLowerCase()
+}

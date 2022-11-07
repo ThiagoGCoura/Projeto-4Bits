@@ -14,7 +14,7 @@ import lombok.Data;
 @Entity
 public class Vaga {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_vaga")
     private Long id;
 
