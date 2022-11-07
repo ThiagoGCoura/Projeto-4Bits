@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang ="pt-br">
+<html lang ="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
+        <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+        <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
         <title>Estacionamento</title>
-        <link rel="stylesheet" href="./css/ending-plan.css">
+        <link rel="stylesheet" th:href="@{/css/ending-plan.css}">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -62,101 +64,61 @@
         </div>
 
     <script>
-        const data = [{
-            numero: "1",
-            estadia: {
-                entrada: "2022-10-08T12:00:00",
-                saida: "2022-10-08T16:00:00",
-                cliente: {
-                    nome: "Laercio Pereira",
-                    cpf: "12345678901",
-                    telefone: "11988888087",
-                    veiculo: {
-                        marca: "Audi",
-                        modelo: null,
-                        cor: "Azul",
-                        placa: "AAD-$4T44",
-                        tipo: "Automovel",
-                    },
-                },
-            },
-        } ];
 
-        function showDataVacancy() {
-            data.map((elem, index) => {
-                const name_client = document.getElementById("name_client")
-                const board = document.getElementById("board")
-                const date_entry = document.getElementById("date_entry")
-                const hourFormat_entry = document.getElementById("hour_entry")
-                const date_expiration = document.getElementById("date_expiration")
-                const hourFormat_expiration = document.getElementById("hour_expiration");
-                const amount = document.getElementById("amount")
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+          get: (searchParams, prop) => searchParams.get(prop),
+        });
 
-                const client = elem.estadia.cliente
-                const car = client.veiculo
+        async function showDataVacancy() {
+            await fetch(`/estadias/${params.estadia_id}`)
+				.then((response) => response.json())
+				.then((elem) => {
+                    const name_client = document.getElementById("name_client")
+                    const board = document.getElementById("board")
+                    const date_entry = document.getElementById("date_entry")
+                    const hourFormat_entry = document.getElementById("hour_entry")
+                    const date_expiration = document.getElementById("date_expiration")
+                    const hourFormat_expiration = document.getElementById("hour_expiration");
+                    const amount = document.getElementById("amount")
 
-                //formata a data de entrada
-                let date_entry_car = String(elem.estadia.entrada).split("T", 3);
-                let date_entry_separator = date_entry_car[0].split("-");
-                let day_entry = date_entry_separator[2];
-                let month_entry = date_entry_separator[1];
-                let year_entry = date_entry_separator[0];
-                let dateFormat_entry = `${day_entry}/${month_entry}/${year_entry}`;
+                    const client = elem.cliente
+                    const car = client.veiculo
 
-                //formata a data de saida
-                let date_exit_car = String(elem.estadia.saida).split("T", 3);
-                let date_exit_separator = date_exit_car[0].split("-");
-                let day_exit = date_exit_separator[2];
-                let month_exit = date_exit_separator[1];
-                let year_exit = date_exit_separator[0];
-                let dateFormat_exit = `${day_exit}/${month_exit}/${year_exit}`;
+                    //formata a data de entrada
+                    let date_entry_car = String(elem.entrada).split("T", 3);
+                    let date_entry_separator = date_entry_car[0].split("-");
+                    let day_entry = date_entry_separator[2];
+                    let month_entry = date_entry_separator[1];
+                    let year_entry = date_entry_separator[0];
+                    let dateFormat_entry = `${day_entry}/${month_entry}/${year_entry}`;
 
+                    //formata a data de saida
+                    let date_exit_car = String(elem.saida).split("T", 3);
+                    let date_exit_separator = date_exit_car[0].split("-");
+                    let day_exit = date_exit_separator[2];
+                    let month_exit = date_exit_separator[1];
+                    let year_exit = date_exit_separator[0];
+                    let dateFormat_exit = `${day_exit}/${month_exit}/${year_exit}`;
 
+                    //formata o horario de entrada
+                    let hour_entry_car = String(elem.entrada).split("T", 3);
+                    let hour_entry_separator = hour_entry_car[1].split("t");
+                    let hour_entry = hour_entry_separator[0].split(":", 2)
+                    let hour_Format_entry = `${hour_entry[0]}:${hour_entry[1]}`
 
-                //formata o horario de entrada
-                let hour_entry_car = String(elem.estadia.entrada).split("T", 3);
-                let hour_entry_separator = hour_entry_car[1].split("t");
-                let hour_entry = hour_entry_separator[0].split(":", 2)
-                let hour_Format_entry = `${hour_entry[0]}:${hour_entry[1]}`
+                    let hour_expiration_car = String(elem.saida).split("T", 3);
+                    let hour_expiration_separator = hour_expiration_car[1].split("t");
+                    let hour_expiration = hour_expiration_separator[0].split(":", 2)
+                    let hour_Format_expiration = `${hour_expiration[0]}:${hour_expiration[1]}`
 
-                let hour_expiration_car = String(elem.estadia.saida).split("T", 3);
-                let hour_expiration_separator = hour_expiration_car[1].split("t");
-                let hour_expiration = hour_expiration_separator[0].split(":", 2)
-                let hour_Format_expiration = `${hour_expiration[0]}:${hour_expiration[1]}`
-
-
-                let days_entry = new Date(elem.estadia.entrada)
-                let days_exit = new Date(elem.estadia.saida)
-
-                function formatar_segundos(h,min,s) {
-                    return (h*3600)+(min*60)+(s);
-                }
-
-                var data = formatar_segundos(23,14,32);
-                var data2 = formatar_segundos(22,55,27);
-
-                var diff = data_format(days_entry - days_exit);
-
-                function data_format(s) {
-                    this.h = Math.floor(s/3600);
-                    this.min = Math.floor((s - (this.h*3600))/60);
-                    this.s = s - (Math.floor(s/60)*60);
-                    return this.h * (-1);
-                }
-
-
-                let b = Math.abs((day_entry) - (days_exit))
-                let a = Math.abs(days_exit.getTime() - days_entry.getTime())
-                var diffHours = diff / 1000
-
-                name_client.innerHTML = client.nome
-                board.innerHTML = car.placa
-                date_entry.innerHTML = dateFormat_entry
-                hourFormat_entry.innerHTML = hour_Format_entry
-                date_expiration.innerHTML = dateFormat_exit
-                hourFormat_expiration.innerHTML = hour_Format_expiration
-                amount.innerHTML = `R$ ${diffHours * 10.5}`
-            })
+                    name_client.innerHTML = client.nome
+                    board.innerHTML = car.placa
+                    date_entry.innerHTML = dateFormat_entry
+                    hourFormat_entry.innerHTML = hour_Format_entry
+                    date_expiration.innerHTML = dateFormat_exit
+                    hourFormat_expiration.innerHTML = hour_Format_expiration
+                    amount.innerHTML = `R$ ${elem.valor}`
+            });
         }
     </script>
     </body>

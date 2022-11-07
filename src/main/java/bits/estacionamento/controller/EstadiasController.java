@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import bits.estacionamento.entity.Estadia;
+import bits.estacionamento.exception.EstadiaNaoEncontradaException;
 import bits.estacionamento.repository.EstadiasRepository;
 import bits.estacionamento.service.EncerrarEstadiaService;
 
@@ -21,5 +22,10 @@ public class EstadiasController {
     @RequestMapping(value = "/estadias/{id}/encerrar", method = RequestMethod.POST)
     public Estadia encerrarEstadia(@PathVariable Long id) {
         return encerrarEstadiaService.perform(id);
+    }
+
+    @RequestMapping("/estadias/{id}")
+    public Estadia getEstadia(@PathVariable Long id) {
+        return estadiasRepository.findById(id).orElseThrow(() -> new EstadiaNaoEncontradaException());
     }
 }
