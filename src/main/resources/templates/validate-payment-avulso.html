@@ -24,7 +24,7 @@
                         <h2>Pagamento Avulso</h2>
                     </div>
                     <span class="borda_inferior"></span>
-                    <form class="formulario" method = "post" action="">
+                    <form id="form_pagamento" class="formulario" method = "post" action="/pagamentos" onsubmit="submitForm(this); return false;">
                         <div class="data_ending">
                             <label>Nome do Cliente</label>
                             <span id="name_client"></span>
@@ -118,6 +118,32 @@
                     date_expiration.innerHTML = dateFormat_exit
                     hourFormat_expiration.innerHTML = hour_Format_expiration
                     amount.innerHTML = `R$ ${elem.valor}`
+            });
+        }
+
+        function submitForm(form) {
+            var token = document.getElementById('_csrf').content;
+            var header = document.getElementById('_csrf_header').content;
+
+            fetch(form.getAttribute('action'), {
+                method: form.getAttribute('method'),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accepts': 'application/json',
+                    [header]: token
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    idEstadia: params.estadia_id
+                })
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.error) {
+                    alert('Ocorreu um erro: ' + data.message);
+                } else {
+                    location.href = '/';
+                }
             });
         }
     </script>

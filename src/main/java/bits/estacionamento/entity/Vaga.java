@@ -5,10 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import lombok.Data;
+
+import org.hibernate.annotations.JoinFormula;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Data
 @Entity
@@ -20,7 +23,14 @@ public class Vaga {
 
     String numero;
 
-    @OneToOne
-    @JoinColumn(name = "id_estadia")
-    Estadia estadia;
+    @ManyToOne
+    @JoinFormula(
+        "(SELECT e.id_estadia " +
+            "FROM estadia e " +
+            "WHERE e.id_vaga = id_vaga " +
+            "AND e.status = 'ATIVO' " +
+            "LIMIT 1)"
+    )
+    @JsonManagedReference
+    private Estadia estadia;
 }
