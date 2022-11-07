@@ -1,4 +1,4 @@
-package bits.estacionamento.security;
+package bits.estacionamento.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -12,5 +12,4 @@ public class WebConfiguration  implements WebMvcConfigurer {
         registry.addViewController("/").setViewName("home");
         registry.addViewController("/login").setViewName("login");
     }
-
 }
