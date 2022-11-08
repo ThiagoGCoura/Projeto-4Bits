@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import bits.estacionamento.entity.Vaga;
@@ -15,7 +16,7 @@ public class VagasController {
   @Autowired
   private VagasRepository repository;
 
-  @RequestMapping("/vagas")
+  @RequestMapping(value = "/vagas", method = RequestMethod.GET)
   public List<Vaga> list() {
     return IterableUtils.toList(repository.findAll());
   }

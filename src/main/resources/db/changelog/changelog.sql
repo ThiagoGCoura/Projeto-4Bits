@@ -96,3 +96,43 @@ values
     ('78', 1);
 
 -- rollback truncate table vaga, estadia, cliente, veiculo;
+
+-- changeset 0811.theodoro:"adiciona relacionado entre vaga e estadia para many-to-many"
+alter table estadia
+    add column id_vaga BIGINT;
+
+alter table estadia
+add constraint estadia_vaga_fk
+foreign key (id_vaga) references vaga(id_vaga);
+
+-- rollback alter table estadia drop foreign key estadia_vaga_fk;
+-- rollback alter table estadia drop column id_vaga;
+
+-- changeset 0811.theodoro:"adiciona coluna tipo plano em estadia"
+alter table estadia add column tipo_plano varchar(100);
+-- rollback alter table estadia drop column tipo_plano;
+
+-- changeset 0811.theodoro:"adiciona coluna valor em estadia"
+alter table estadia add column valor decimal(19,2);
+-- rollback alter table estadia drop column valor;
+
+-- changeset 0811.theodoro:"adiciona coluna status em estadia"
+alter table estadia add column status varchar(100);
+-- rollback alter table estadia drop column status;
+
+-- changeset 0811.theodoro:"cria tabela pagamento"
+create table pagamento (
+    id_pagamento BIGINT auto_increment not null,
+    criado_em DATETIME NOT NULL,
+    CONSTRAINT pagamento_pk PRIMARY KEY (id_pagamento)
+);
+
+alter table estadia add column id_pagamento BIGINT;
+
+alter table estadia
+add constraint estadia_pagamento_fk
+foreign key (id_pagamento) references pagamento(id_pagamento);
+
+-- rollback alter table estadia drop foreign key estadia_pagamento_fk;
+-- rollback alter table estadia drop column id_pagamento;
+-- rollback drop table pagamento;

@@ -105,13 +105,12 @@ body {
 }
 
 .list-item-set {
-	display: flex;
-	flex-direction: column;
 	list-style: none;
-	justify-content: space-between;
 	height: 600px;
 	overflow-y: auto;
 }
+
+
 
 .avulso{
 	display: none;
@@ -120,6 +119,7 @@ body {
 ::-webkit-scrollbar-track {
 	background-color: #F4F4F4;
 }
+
 ::-webkit-scrollbar {
 	width: 10px;
 	background: #F4F4F4;
@@ -154,6 +154,10 @@ body {
 	background-color: #f1f1f1;
 }
 
+.redirect_confirm_pay:active{
+	color:#2aca2a;
+}
+
 .item-list .empty{
 	width: 12px;
 	height: 12px;
@@ -164,21 +168,35 @@ body {
 }
 
 .item-status, .title-status,
-.item-vacancy, .title-vacancy,
+.item-payment, .title-pay,
+.item-vacancy, .title-vacancy{
+	max-width: 50px;
+}
+
 .item-color, .title-color,
 .item-brand, .title-brand {
 	max-width: 100px;
 }
 
-.item-name, .title-name,
-.item-plan, .title-plan,
 .item-board, .title-board,
-.item-type, .title-type,
-.item-model, .title-model,
+.item-action, .title-action{
+	max-width: 80px;
+}
+
 .item-cpf, .title-cpf,
 .item-phone, .title-phone,
+.item-type, .title-type,
+.item-plan, .title-plan{
+	max-width: 114px;
+}
+
+.item-name, .title-name{
+	max-width: 180px;
+}
+
+.item-model, .title-model,
 .item-expiration, .title-expiration{
-	max-width: 100%;
+	max-width: 120px;
 }
 
 
@@ -213,7 +231,7 @@ span.end-date {
 	border-radius: 4px;
 }
 
-.end-date#expired {
+.end-date#not_pay {
 	color: #991111;
 	background: #FDD1D6;
 }
@@ -273,21 +291,13 @@ input.end-date{
 	border-radius: 4px;
 }
 
-
-
 main {
 	width: 100%;
 }
 
-
-
 main {
 	flex: 1;
 }
-
-
-
-
 
 .rodape {
 	display: flex;
@@ -301,3 +311,14 @@ main {
 	margin-bottom: 20px;
 	position:  absolute;
 }
+
+@media(max-width: 1300px) {
+	.item-list, .btn, .end-date{
+		font-size: 11px;
+	}
+
+	.title-list{
+		font-size: 14px;
+	}
+}
+
