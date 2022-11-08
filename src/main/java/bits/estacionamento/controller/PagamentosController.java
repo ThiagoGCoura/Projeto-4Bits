@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import bits.estacionamento.controller.request.CriarPagamentoRequest;
 import bits.estacionamento.entity.Estadia;
 import bits.estacionamento.entity.Pagamento;
 import bits.estacionamento.entity.TipoPlano;
@@ -39,7 +40,7 @@ public class PagamentosController {
 
     @RequestMapping(value = "/pagamentos", method = RequestMethod.POST)
     @ResponseBody
-    public Pagamento pagar(@Validated @RequestBody PagamentoRequest request) {
+    public Pagamento criarPagamento(@Validated @RequestBody CriarPagamentoRequest request) {
         return pagamentoService.perform(request.getIdEstadia());
     }
 }
