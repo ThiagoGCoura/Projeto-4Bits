@@ -70,62 +70,64 @@
         });
 
         async function showDataVacancy() {
-            await fetch(`/estadias/${params.estadia_id}`)
-				.then((response) => response.json())
-				.then((elem) => {
-                    const name_client = document.getElementById("name_client")
-                    const board = document.getElementById("board")
-                    const date_entry = document.getElementById("date_entry")
-                    const hourFormat_entry = document.getElementById("hour_entry")
-                    const date_expiration = document.getElementById("date_expiration")
-                    const hourFormat_expiration = document.getElementById("hour_expiration");
-                    const amount = document.getElementById("amount")
+            let response = await fetch(`/estadias/${params.estadia_id}`)
+            let elem = await response.json()
 
-                    const client = elem.cliente
-                    const car = client.veiculo
+            const name_client = document.getElementById("name_client")
+            const board = document.getElementById("board")
+            const date_entry = document.getElementById("date_entry")
+            const hourFormat_entry = document.getElementById("hour_entry")
+            const date_expiration = document.getElementById("date_expiration")
+            const hourFormat_expiration = document.getElementById("hour_expiration");
+            const amount = document.getElementById("amount")
 
-                    //formata a data de entrada
-                    let date_entry_car = String(elem.entrada).split("T", 3);
-                    let date_entry_separator = date_entry_car[0].split("-");
-                    let day_entry = date_entry_separator[2];
-                    let month_entry = date_entry_separator[1];
-                    let year_entry = date_entry_separator[0];
-                    let dateFormat_entry = `${day_entry}/${month_entry}/${year_entry}`;
+            const client = elem.cliente
+            const car = client.veiculo
 
-                    //formata a data de saida
-                    let date_exit_car = String(elem.saida).split("T", 3);
-                    let date_exit_separator = date_exit_car[0].split("-");
-                    let day_exit = date_exit_separator[2];
-                    let month_exit = date_exit_separator[1];
-                    let year_exit = date_exit_separator[0];
-                    let dateFormat_exit = `${day_exit}/${month_exit}/${year_exit}`;
+            //formata a data de entrada
+            let date_entry_car = String(elem.entrada).split("T", 3);
+            let date_entry_separator = date_entry_car[0].split("-");
+            let day_entry = date_entry_separator[2];
+            let month_entry = date_entry_separator[1];
+            let year_entry = date_entry_separator[0];
+            let dateFormat_entry = `${day_entry}/${month_entry}/${year_entry}`;
 
-                    //formata o horario de entrada
-                    let hour_entry_car = String(elem.entrada).split("T", 3);
-                    let hour_entry_separator = hour_entry_car[1].split("t");
-                    let hour_entry = hour_entry_separator[0].split(":", 2)
-                    let hour_Format_entry = `${hour_entry[0]}:${hour_entry[1]}`
+            //formata a data de saida
+            let date_exit_car = String(elem.saida).split("T", 3);
+            let date_exit_separator = date_exit_car[0].split("-");
+            let day_exit = date_exit_separator[2];
+            let month_exit = date_exit_separator[1];
+            let year_exit = date_exit_separator[0];
+            let dateFormat_exit = `${day_exit}/${month_exit}/${year_exit}`;
 
-                    let hour_expiration_car = String(elem.saida).split("T", 3);
-                    let hour_expiration_separator = hour_expiration_car[1].split("t");
-                    let hour_expiration = hour_expiration_separator[0].split(":", 2)
-                    let hour_Format_expiration = `${hour_expiration[0]}:${hour_expiration[1]}`
+            //formata o horario de entrada
+            let hour_entry_car = String(elem.entrada).split("T", 3);
+            let hour_entry_separator = hour_entry_car[1].split("t");
+            let hour_entry = hour_entry_separator[0].split(":", 2)
+            let hour_Format_entry = `${hour_entry[0]}:${hour_entry[1]}`
 
-                    name_client.innerHTML = client.nome
-                    board.innerHTML = car.placa
-                    date_entry.innerHTML = dateFormat_entry
-                    hourFormat_entry.innerHTML = hour_Format_entry
-                    date_expiration.innerHTML = dateFormat_exit
-                    hourFormat_expiration.innerHTML = hour_Format_expiration
-                    amount.innerHTML = `R$ ${elem.valor}`
-            });
+            let hour_expiration_car = String(elem.saida).split("T", 3);
+            let hour_expiration_separator = hour_expiration_car[1].split("t");
+            let hour_expiration = hour_expiration_separator[0].split(":", 2)
+            let hour_Format_expiration = `${hour_expiration[0]}:${hour_expiration[1]}`
+
+            //formata valor da estadia
+            let amount_format = 'R$ ' + parseFloat(elem.valor).toFixed(2)
+
+            name_client.innerHTML = client.nome
+            board.innerHTML = car.placa
+            date_entry.innerHTML = dateFormat_entry
+            hourFormat_entry.innerHTML = hour_Format_entry
+            date_expiration.innerHTML = dateFormat_exit
+            hourFormat_expiration.innerHTML = hour_Format_expiration
+            amount.innerHTML = amount_format
         }
 
-        function submitForm(form) {
+        async function submitForm(form) {
             var token = document.getElementById('_csrf').content;
             var header = document.getElementById('_csrf_header').content;
 
-            fetch(form.getAttribute('action'), {
+            var response = await fetch(form.getAttribute('action'), {
                 method: form.getAttribute('method'),
                 headers: {
                     'Content-Type': 'application/json',
@@ -136,15 +138,14 @@
                 body: JSON.stringify({
                     idEstadia: params.estadia_id
                 })
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.error) {
-                    alert('Ocorreu um erro: ' + data.message);
-                } else {
-                    location.href = '/';
-                }
             });
+
+            var data = await response.json();
+            if (data.error) {
+                alert('Ocorreu um erro: ' + data.message);
+            } else {
+                location.href = '/';
+            }
         }
     </script>
     </body>
