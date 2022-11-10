@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	</head>
 
-	<body onload="showVacancy()">
+	<body>
 		<div id="container">
 			<header class="cabecalho">
                 <div>
@@ -68,10 +68,137 @@
 			</footer>
 		</div>
 	</body>
-	<script th:src="@{/js/script.js}"></script>
-	<script>
-		async function showVacancy() {
-			await fetch('/vagas')
+	<script id="estadia-template" type="text/x-handlebars-template">
+		{{#each items}}
+			<li>
+				<form
+					class="data-vacancy"
+					method="post"
+					{{#if car.placa}}action="estadias/{{estadia.id}}"{{else}}action="/estadias"{{/if}}
+					onsubmit="submitForm(this); return false;">
+						<span class="item-list item-status">
+							<span {{#if car.placa}}class="empty"{{else}}class="busy"{{/if}}></span>
+						</span>
+
+						<span class="item-list item-vacancy">{{vaga.numero}}</span>
+
+						{{#if (editable estadia)}}
+							<input
+								class="item-list item-board"
+								name="frm_board"
+								onkeyup="handleBoard(event)"
+								onblur="alertBoard(event)"
+								maxlength="7"
+								title=""
+								value="{{car.placa}}">
+						{{else}}
+							<span
+								class="item-list item-board"
+								name="frm_board"
+								>{{car.placa}}</span>
+						{{/if}}
+
+						{{#if (editable estadia)}}
+							<input class="item-list item-model" name="frm_model" value="{{car.modelo}}">
+						{{else}}
+							<span class="item-list item-model" name="frm_model">{{car.modelo}}</span>
+						{{/if}}
+
+						{{#if (editable estadia)}}
+							<input class="item-list item-brand" name="frm_brand" value="{{car.marca}}">
+						{{else}}
+							<span class="item-list item-brand" name="frm_brand">{{car.marca}}</span>
+						{{/if}}
+
+						{{#if (editable estadia)}}
+							<input class="item-list item-color" name="frm_color" type="text" value="{{car.cor}}">
+						{{else}}
+							<span class="item-list item-color" name="frm_color" type="text">{{car.cor}}</span>
+						{{/if}}
+
+						{{#if (editable estadia)}}
+							<select class="item-list item-type" name="frm_type">
+								<option value="CARRO" {{{select car.tipo 'CARRO'}}}>Carro</option>
+								<option value="MOTOCICLETA" {{{select car.tipo 'MOTOCICLETA'}}}>Moto</option>
+								<option value="CAMINHONETE" {{{select car.tipo 'CAMINHONETE'}}}>Caminhonete</option>
+								<option value="UTILITARIO" {{{select car.tipo 'UTILITARIO'}}}>Utilitario</option>
+							</select>
+						{{else}}
+							<span class="item-list item-type" name="frm_type">{{car.tipo}}</span>
+						{{/if}}
+
+						{{#if (editable estadia)}}
+							<input class="item-list item-name" name="frm_name" value="{{client.nome}}">
+						{{else}}
+							<span class="item-list item-name" name="frm_name">{{client.nome}}</span>
+						{{/if}}
+
+						{{#if (editable estadia)}}
+							<input class="item-list item-cpf" name="frm_cpf" type="text" maxlength="14" onkeyup="handleCpf(event)" value="{{client.cpf}}">
+						{{else}}
+							<span class="item-list item-cpf" name="frm_cpf">{{client.cpf}}</span>
+						{{/if}}
+
+						{{#if (editable estadia)}}
+							<input class="item-list item-phone" name="frm_phone" type="tel" maxlength="15" onkeyup="handlePhone(event)" value="{{client.telefone}}">
+						{{else}}
+							<span class="item-list item-phone" name="frm_phone">{{client.telefone}}</span>
+						{{/if}}
+
+						{{#if (editable estadia)}}
+							<select class="item-list item-plan" name="frm_plan" onchange="handleChangePlan({{@index}})">
+								<option class="plan-diary" name="diary" value="AVULSO" {{{select estadia.plano 'AVULSO'}}}>Avulso</option>
+								<option class="plan-monthly" name="monthly" value="MENSAL" {{{select estadia.plano 'MENSAL'}}}>Mensal</option>
+							</select>
+						{{else}}
+							<span class="item-list item-plan" name="frm_plan">{{estadia.plano}}</span>
+						{{/if}}
+
+						<div class="item-list item-expiration">
+							{{#if estadia.saida}}
+							<input
+								class="end-date mensal"
+								name="frm_expiration"
+								{{#unless estadia.pagamento}}id="not_pay"{{/unless}}
+								value="{{{dateFormat estadia.saida}}}">
+							{{/if}}
+						</div>
+
+						<div class="item-list item-action">
+							<button
+								type="submit"
+								class="btn btn_action {{#if car.placa}}btn-add{{else}}btn-close{{/if}}"
+								{{#if estadia.saida}}
+									id="missing-payment"
+									disabled
+									title="⚠️ Validar pagamento"
+									style="cursor: initial;"
+								{{/if}}>
+									{{#if car.placa}}
+										Finalizar
+									{{else}}
+										Cadastrar
+									{{/if}}
+							</button>
+						</div>
+
+						<div class="item-list item-payment">
+							{{#if (and car.placa (not estadia.pagamento) estadia.saida)}}
+								<a class="redirect_confirm_pay" href="/pagamentos/novo?estadia_id={{estadia.id}}">
+									<i class="fa-regular fa-credit-card"></i>
+								</a>
+							{{/if}}
+					</div>
+				</form>
+			</li>
+		{{/each}}
+	  </script>
+	  <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+	  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+	  <script th:src="@{/js/script.js}"></script>
+	  <script>
+		function showVacancy() {
+			fetch('/vagas')
 				.then((response) => response.json())
 				.then((data) => {
 					if("[[${#httpServletRequest.remoteUser}]]" == "atendente") {
@@ -81,6 +208,8 @@
 					};
 				});
 		}
-	</script>
+
+		$( document ).ready(showVacancy);
+	  </script>
 </html>
 
