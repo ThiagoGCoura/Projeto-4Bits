@@ -60,11 +60,11 @@ const boardMask = (value) => {
 };
 
 const alertBoard = (event) => {
-    var regex = "[A-Z]{3}-[0-9]{1}[0-9A-Z]{1}[0-9]{2}";
+    var regex = "[A-Z]{3}-[0-9]{1}[0-9A-Z]{1}[0-9]{2}|[A-Z]{3}-[0-9]4";
     var placa = event.target.value;
 
     if (!placa.match(regex)) {
-        window.alert("A placa digitada está incorreta!")
+        window.alert("A placa deve ser digitada no formato AAA9A99 ou AAA9999 em que A é uma letra e 9 um dígito")
 
     }
 };
@@ -117,32 +117,158 @@ function criaLista(data, isManager) {
 }
 
 async function submitForm(form) {
+    var data = getData(form);
+
+    if (data.id_estadia) {
+        return await encerrarEstadia(data);
+    } else {
+        return await iniciarEstadia(data);
+    }
+}
+async function encerrarEstadia(data) {
     var token = document.getElementById('_csrf').content;
     var header = document.getElementById('_csrf_header').content;
 
-    await fetch(form.getAttribute('action'), {
-        method: form.getAttribute('method'),
+    var response = await fetch(`/estadias/${data.id_estadia}/encerrar`, {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Accepts': 'application/json',
             [header]: token
         },
         credentials: 'include',
-        body: JSON.stringify(getData(form))
+        body: JSON.stringify()
     })
-    .then((response) => response.json())
-    .then((estadia) => {
-      if(estadia.saida != null) {
+
+    if (response.status === 200) {
+        var estadia = await response.json();
         location.href = `/pagamentos/novo?estadia_id=${estadia.id}`;
-      } else {
-        alert('TODO: tratar retorno da criação de estadias')
-      }
+    } else {
+        let error = await getApiError(response);
+        alert('Erro ' + error);
+    }
+}
+
+async function iniciarEstadia(data) {
+    var token = document.getElementById('_csrf').content;
+    var header = document.getElementById('_csrf_header').content;
+
+    let veiculo
+    try {
+        veiculo = await criaVeiculo(data, {[header]: token});
+        console.log('Veiculo criado / encontrato' + JSON.stringify(veiculo));
+    } catch(e) {
+        return alert('Erro ao criar veículo: ' + e);
+    }
+
+    let cliente
+    try {
+        cliente = await criaCliente({...data, veiculoId: veiculo.id}, {[header]: token});
+        console.log('Cliente criado / encontrato' + JSON.stringify(cliente));
+    } catch(e) {
+        return alert('Erro ao criar cliente: ' + e);
+    }
+
+    let estadia
+    try {
+        estadia = await criaEstadia({...data, clienteId: cliente.id}, {[header]: token});
+        console.log('Estadia criada: ' + JSON.stringify(estadia));
+        alert('Estadia iniciada em: ' + estadia.entrada)
+        location.reload();
+    } catch(e) {
+        return alert('Erro ao criar estadia: ' + e);
+    }
+
+
+}
+
+async function criaVeiculo({ placa, marca, modelo, cor, tipo }, csrfHeader) {
+    response = await fetch(`/veiculos`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accepts': 'application/json',
+            ...csrfHeader
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            placa, marca, modelo, cor, tipo
+        }),
     });
+
+    if (response.status === 200) {
+        return response.json();
+    }
+
+    let error = await getApiError(response);
+    throw error;
+}
+
+async function criaCliente({ nome, cpf, telefone, veiculoId }, csrfHeader) {
+    response = await fetch(`/clientes`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accepts': 'application/json',
+            ...csrfHeader
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            nome, cpf, telefone, veiculoId
+        }),
+    });
+
+    if (response.status === 200) {
+        return response.json();
+    }
+
+    let error = await getApiError(response);
+    throw error;
+}
+
+async function criaEstadia({ vagaId, clienteId, plano }, csrfHeader) {
+    response = await fetch(`/estadias`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accepts': 'application/json',
+            ...csrfHeader
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            vagaId, clienteId, plano
+        }),
+    });
+
+    if (response.status === 200) {
+        return response.json();
+    }
+
+    let error = await getApiError(response);
+    throw error;
+}
+
+async function getApiError(response) {
+    let error = await response.text();
+    try {
+        error = JSON.parse(error);
+        error = error.errors.reduce((acc, error) => error.defaultMessage + ' ', '')
+    } catch(e) {
+        error = error
+    }
+
+    return error;
 }
 
 function getData(form) {
   var formData = new FormData(form);
-  return Object.fromEntries(formData);
+  var data = Object.fromEntries(formData);
+
+  data.cpf = (data.cpf || '').replace(/[ -.()]/g, '')
+  data.placa = (data.placa || '').replace(/[ -.()]/g, '')
+  data.telefone = (data.telefone || '').replace(/[ -.()]/g, '')
+
+  return data;
 }
 
 function formatPlano(plano) {
@@ -151,3 +277,4 @@ function formatPlano(plano) {
     }
     return plano[0].toUpperCase() + plano.slice(1).toLowerCase()
 }
+

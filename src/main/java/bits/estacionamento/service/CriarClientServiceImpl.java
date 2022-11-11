@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import bits.estacionamento.entity.Cliente;
 import bits.estacionamento.entity.Veiculo;
-import bits.estacionamento.exception.ClienteJaCadastradoException;
 import bits.estacionamento.exception.VeiculoNaoEncontradoException;
 import bits.estacionamento.repository.ClientesRepository;
 import bits.estacionamento.repository.VeiculosRepository;
@@ -23,10 +22,6 @@ public class CriarClientServiceImpl implements CriarClientService {
     @Transactional
     public Cliente perform(String nome, String cpf, String telefone, Long veiculoId) {
         Veiculo veiculo = veiculosRepository.findById(veiculoId).orElseThrow(() -> new VeiculoNaoEncontradoException());
-        if (!clientesRepository.findByCpf(cpf).isEmpty()) {
-            throw new ClienteJaCadastradoException();
-        }
-
         final Cliente cliente = new Cliente();
         cliente.setCpf(cpf);
         cliente.setNome(nome);

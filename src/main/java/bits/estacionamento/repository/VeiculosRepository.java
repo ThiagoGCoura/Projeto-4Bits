@@ -8,6 +8,4 @@ import bits.estacionamento.entity.Veiculo;
 
 public interface VeiculosRepository extends CrudRepository<Veiculo, Long> {
     Set<Veiculo> findByPlacaStartsWith(String placa);
-
-    Set<Veiculo> findByPlaca(String placa);
 }
