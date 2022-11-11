@@ -7,223 +7,6 @@ function searchCar() {
     search_car.setAttribute("href", `#${search_board}`);
 }
 
-function userAtendente(data) {
-    //pega o elemento ul para adicionar as vagas
-    let vacancy_list = document.querySelector(".list-item-set");
-
-    data?.map((elem, index) => {
-        let vaga = elem;
-        let estadia = elem.estadia || {}
-        let client = estadia.cliente || {};
-        let car = client.veiculo || {};
-        let board_car = car.placa;
-
-        //valida se tem data de saida
-        let exit_car = !!estadia.saida
-
-        //formata a data
-        let exit_date = String(estadia.saida).split("T", 3);
-        let date2 = exit_date[0].split("-");
-        let day = date2[2];
-        let month = date2[1];
-        let year = date2[0];
-        let dateFormat = `${day}/${month}/${year}`;
-
-        //cria a tag que irá todas a vagas
-        let form = document.createElement("form");
-        form.className = "data-vacancy";
-        form.setAttribute("action", board_car ? `/estadias/${estadia.id}` : `/estadias`);
-        form.setAttribute("method", "post");
-
-        //cria a tag status
-        let item_status = document.createElement("span");
-        item_status.className = "item-list item-status";
-
-        //cria a tag para de cor do status
-        let color_status = document.createElement("span");
-        color_status.className = `${board_car ? "empty" : "busy"}`;
-
-        //add a tag status e cor
-        form.appendChild(item_status);
-        item_status.appendChild(color_status);
-
-        //verificar o status
-        let vacancy_status = !board_car;
-        let input_data = vacancy_status ? "input" : "span";
-        let select_data = vacancy_status ? "select" : "span";
-
-        //cria as tag após verificação se há veiculo na vaga
-        let item_vacancy = document.createElement("span");
-        let item_board = document.createElement(input_data);
-        let item_model = document.createElement(input_data);
-        let item_brand = document.createElement(input_data);
-        let item_color = document.createElement(input_data);
-        let item_type = document.createElement(select_data);
-
-        let item_name = document.createElement(input_data);
-        let item_cpf = document.createElement(input_data);
-        let item_phone = document.createElement(input_data);
-        // let item_plan = document.createElement(select_data);
-        let plan_option = document.createElement(select_data);
-        let plan_option_diary = document.createElement("option");
-        let plan_option_monthly = document.createElement("option");
-        let item_expiration = document.createElement("div");
-        let expiration_date = document.createElement(input_data);
-        let item_action = document.createElement("div");
-        let btn_action = document.createElement("button");
-        let btn_payment = document.createElement("div");
-
-        //add as classes nas tags
-        item_vacancy.className = "item-list item-vacancy";
-        item_board.className = "item-list item-board";
-        item_model.className = "item-list item-model";
-        item_brand.className = "item-list item-brand";
-        item_color.className = "item-list item-color";
-        item_type.className = "item-list item-type";
-        item_name.className = "item-list item-name";
-        item_cpf.className = "item-list item-cpf";
-        item_phone.className = "item-list item-phone";
-        plan_option.className = "item-list item-plan";
-        plan_option_diary.className = "plan-diary";
-        plan_option_monthly.className = "plan-monthly";
-        item_expiration.className = "item-list item-expiration";
-        expiration_date.className = `${
-            exit_car && select_data == "span"
-                ? "end-date avulso"
-                : "end-date mensal"
-        }`;
-        item_action.className = "item-list item-action";
-        btn_payment.className = "item-list item-payment";
-        btn_action.className = `btn btn_action ${
-            car.placa ? "btn-add" : "btn-close"
-        }`;
-
-        if(!estadia.pagamento && exit_car) {
-            expiration_date.setAttribute("id", "not_pay");
-            btn_action.setAttribute("id", "missing-payment");
-            btn_action.setAttribute("disabled", "")
-            btn_action.setAttribute("title", "⚠️ Validar pagamento")
-            btn_action.style.cursor = "initial"
-        }
-
-        //add os conteudos nas tags
-        item_status.innerHTML = "";
-        item_vacancy.innerHTML = vaga.numero || "";
-        item_board.innerHTML = board_car || "";
-        item_model.innerHTML = car.modelo || "";
-        item_brand.innerHTML = car.marca || "";
-        item_color.innerHTML = car.cor || "";
-        item_type.innerHTML = car.tipo || "";
-        item_name.innerHTML = client.nome || "";
-        item_cpf.innerHTML = client.cpf || "";
-        item_phone.innerHTML = client.telefone || "";
-
-        plan_option.innerHTML = formatPlano(estadia.plano);
-        plan_option_diary.innerHTML = "Avulso";
-        plan_option_monthly.innerHTML = "Mensal";
-        // expiration_date.textContent =  ""
-        btn_action.textContent = board_car ? "Finalizar" : "Cadastrar";
-
-        item_vacancy.setAttribute("name", "frm_vacancy");
-        item_board.setAttribute("name", "frm_board");
-        item_model.setAttribute("name", "frm_model");
-        item_brand.setAttribute("name", "frm_brand");
-        item_color.setAttribute("name", "frm_color");
-        item_type.setAttribute("name", "frm_type");
-        item_name.setAttribute("name", "frm_name");
-        item_cpf.setAttribute("name", "frm_cpf");
-        item_phone.setAttribute("name", "frm_phone");
-        plan_option.setAttribute("name", "frm_plan");
-        expiration_date.setAttribute("name", "frm_expiration");
-
-        //add as tags
-        form.appendChild(item_status);
-        item_status.appendChild(color_status);
-        form.appendChild(item_vacancy);
-        form.appendChild(item_board);
-        form.appendChild(item_model);
-        form.appendChild(item_brand);
-        form.appendChild(item_color);
-        form.appendChild(item_type);
-        form.appendChild(item_name);
-        form.appendChild(item_cpf);
-        form.appendChild(item_phone);
-        form.appendChild(plan_option);
-        form.appendChild(item_expiration);
-        item_expiration.appendChild(expiration_date);
-        form.appendChild(item_action);
-        item_action.appendChild(btn_action);
-        form.appendChild(btn_payment);
-
-        //cria as opçoes de tipo de veiculo
-        let motorcycle = document.createElement("option");
-        let carRide = document.createElement("option");
-        let pickup = document.createElement("option");
-        let utility = document.createElement("option");
-
-        motorcycle.innerHTML = "Moto";
-        carRide.innerHTML = "Carro";
-        pickup.innerHTML = "Caminhonete";
-        utility.innerHTML = "Utilitario";
-
-        let not_pay = !estadia.pagamento && board_car && exit_car
-        if(not_pay) {
-            let card_payment = document.createElement("a")
-            card_payment.className = "redirect_confirm_pay"
-            card_payment.innerHTML = '<i class="fa-regular fa-credit-card" ></i>'
-            btn_payment.appendChild(card_payment)
-            card_payment.setAttribute("href", `/pagamentos/novo?estadia_id=${estadia.id}`)
-        }
-
-        //se vaga não possui placa cadastrada, add as opcões de plano no select e a função se houver mudança de plano
-        if (vacancy_status) {
-            plan_option.appendChild(plan_option_diary);
-            plan_option.appendChild(plan_option_monthly);
-            plan_option.setAttribute("onchange", `handleChangePlan(${index})`);
-
-            item_type.appendChild(carRide);
-            item_type.appendChild(motorcycle);
-            item_type.appendChild(pickup);
-            item_type.appendChild(utility);
-        }
-
-        //add todos os itens
-        let content_item = document.createElement("li");
-        content_item.appendChild(form);
-        vacancy_list.appendChild(content_item);
-
-        item_color.setAttribute("type", "text");
-
-        //atribui validação para placa
-        item_board.setAttribute("onkeyup", "handleBoard(event)");
-        item_board.setAttribute("onblur", "alertBoard(event)");
-        item_board.setAttribute("maxLength", "7");
-        item_board.setAttribute("title", "");
-
-        //atribui validação para telefone
-        item_phone.setAttribute("type", "tel");
-        item_phone.setAttribute("maxlength", "15");
-        item_phone.setAttribute("onkeyup", "handlePhone(event)");
-
-        //atribui validação para cpf
-        item_cpf.setAttribute("type", "text");
-        item_cpf.setAttribute("maxlength", "14");
-        item_cpf.setAttribute("onkeyup", "handleCpf(event)");
-
-        plan_option_diary.setAttribute("name", "diary");
-        plan_option_monthly.setAttribute("name", "monthly");
-
-        if (!exit_car) {
-            expiration_date.setAttribute("type", "hidden");
-            expiration_date.innerHTML = dateFormat;
-        }
-
-        plan_option_diary.setAttribute("selected", "");
-
-        expiration_date.innerHTML = exit_car ? "" : dateFormat;
-    });
-}
-
 function handleChangePlan(index) {
     let date_expiration = document.querySelectorAll(".end-date");
     date_expiration[index].setAttr;
@@ -277,288 +60,215 @@ const boardMask = (value) => {
 };
 
 const alertBoard = (event) => {
-    var regex = "[A-Z]{3}-[0-9]{1}[0-9A-Z]{1}[0-9]{2}";
+    var regex = "[A-Z]{3}-[0-9]{1}[0-9A-Z]{1}[0-9]{2}|[A-Z]{3}-[0-9]4";
     var placa = event.target.value;
 
     if (!placa.match(regex)) {
-        window.alert("A placa digitada está incorreta!")
+        window.alert("A placa deve ser digitada no formato AAA9A99 ou AAA9999 em que A é uma letra e 9 um dígito")
 
     }
 };
 
 
+function userAtendente(data) {
+    criaLista(data, false);
+}
+
 function userGerente(data) {
+    criaLista(data, true);
+}
+
+function criaLista(data, isManager) {
     //pega o elemento ul para adicionar as vagas
-    let vacancy_list = document.querySelector(".list-item-set");
+    const items = data.map((vaga) => {
+        const estadia = vaga.estadia || {};
+        const client = estadia.cliente || {};
+        const car = client.veiculo || {};
 
-    data?.map((elem, index) => {
-        let vaga = elem;
-        let estadia = elem.estadia || {};
-        let client = estadia.cliente || {};
-        let car = client.veiculo || {};
-        let board_car = car.placa;
-
-        //valida se tem data de saida
-        let exit_car = !!estadia.saida
-
-        //formata a data
-        let exit_date = String(estadia.saida).split("T", 3);
-        let date2 = exit_date[0].split("-");
-        let day = date2[2];
-        let month = date2[1];
-        let year = date2[0];
-        let dateFormat = `${day}/${month}/${year}`;
-
-
-        //cria a tag que irá todas a vagas
-        let form = document.createElement("form");
-        form.className = "data-vacancy";
-        form.setAttribute("action", estadia.id ? `/estadias/${estadia.id}/encerrar` : "/estadias");
-        form.setAttribute("method", "post");
-        form.setAttribute("onsubmit", "submitForm(this); return false;");
-
-        //cria a tag status
-        let item_status = document.createElement("span");
-        item_status.className = "item-list item-status";
-
-        //cria a tag para de cor do status
-        let color_status = document.createElement("span");
-        color_status.className = `${board_car ? "empty" : "busy"}`;
-
-        //add a tag status e cor
-        form.appendChild(item_status);
-        item_status.appendChild(color_status);
-
-        //verificar o status
-        let vacancy_status = !board_car;
-        let input_data = "input";
-        let select_data = "select";
-
-        //cria as tag após verificação se há veiculo na vaga
-        let item_vacancy = document.createElement("span");
-        let item_board = document.createElement(input_data);
-        let item_model = document.createElement(input_data);
-        let item_brand = document.createElement(input_data);
-        let item_color = document.createElement(input_data);
-        let item_type = document.createElement(select_data);
-
-        let item_name = document.createElement(input_data);
-        let item_cpf = document.createElement(input_data);
-        let item_phone = document.createElement(input_data);
-        // let item_plan = document.createElement(select_data);
-        let plan_option = document.createElement(select_data);
-        let plan_option_diary = document.createElement("option");
-        let plan_option_monthly = document.createElement("option");
-        let item_expiration = document.createElement("div");
-        let expiration_date = document.createElement(input_data);
-        let item_action = document.createElement("div");
-        let btn_action = document.createElement("button");
-        let btn_payment = document.createElement("div");
-
-        //add as classes nas tags
-        item_vacancy.className = "item-list item-vacancy";
-        item_board.className = "item-list item-board";
-        item_model.className = "item-list item-model";
-        item_brand.className = "item-list item-brand";
-        item_color.className = "item-list item-color";
-        item_type.className = "item-list item-type";
-        item_name.className = "item-list item-name";
-        item_cpf.className = "item-list item-cpf";
-        item_phone.className = "item-list item-phone";
-        plan_option.className = "item-list item-plan";
-        plan_option_diary.className = "plan-diary";
-        plan_option_monthly.className = "plan-monthly";
-        item_expiration.className = "item-list item-expiration";
-        expiration_date.className = `${
-            exit_car && select_data == "span"
-                ? "end-date avulso"
-                : "end-date mensal"
-        }`;
-        item_action.className = "item-list item-action";
-        btn_payment.className = "item-list item-payment";
-        btn_action.className = `btn btn_action ${
-            car.placa ? "btn-add" : "btn-close"
-        }`;
-
-        if(!estadia.pagamento && exit_car) {
-            expiration_date.setAttribute("id", "not_pay");
-            btn_action.setAttribute("id", "missing-payment");
-            btn_action.setAttribute("disabled", "");
-            btn_action.setAttribute("title", "⚠️ Validar pagamento")
-            btn_action.style.cursor = "initial";
-        }
-
-        //add os conteudos nas tags
-        item_status.innerHTML = "";
-        item_vacancy.innerHTML = vaga.numero || "";
-        item_board.value = board_car || "";
-        item_model.value = car.modelo || "";
-        item_brand.value = car.marca || "";
-        item_color.value = car.cor || "";
-        item_type.value = car.tipo || "";
-        item_name.value = client.nome || "";
-        item_cpf.value = client.cpf || "";
-        item_phone.value = client.telefone || "";
-
-        plan_option.innerHTML = formatPlano(estadia.plano);
-        plan_option_diary.innerHTML = "Avulso";
-        plan_option_monthly.innerHTML = "Mensal";
-        // expiration_date.value = dateFormat;
-        btn_action.textContent = board_car ? "Finalizar" : "Cadastrar";
-
-        item_vacancy.setAttribute("name", "frm_vacancy")
-        item_board.setAttribute("name", "frm_board")
-        item_model.setAttribute("name", "frm_model")
-        item_brand.setAttribute("name", "frm_brand")
-        item_color.setAttribute("name", "frm_color")
-        item_type.setAttribute("name", "frm_type")
-        item_name.setAttribute("name", "frm_name")
-        item_cpf.setAttribute("name", "frm_cpf")
-        item_phone.setAttribute("name", "frm_phone")
-        plan_option.setAttribute("name", "frm_plan")
-        expiration_date.setAttribute("name", "frm_expiration")
-
-        //add as tags
-        form.appendChild(item_status);
-        item_status.appendChild(color_status);
-        form.appendChild(item_vacancy);
-        form.appendChild(item_board);
-        form.appendChild(item_model);
-        form.appendChild(item_brand);
-        form.appendChild(item_color);
-        form.appendChild(item_type);
-        form.appendChild(item_name);
-        form.appendChild(item_cpf);
-        form.appendChild(item_phone);
-        form.appendChild(plan_option);
-        form.appendChild(item_expiration);
-        item_expiration.appendChild(expiration_date);
-        form.appendChild(item_action);
-        item_action.appendChild(btn_action);
-        form.appendChild(btn_payment);
-
-        //cria as opçoes de tipo de veiculo
-        let motorcycle = document.createElement("option");
-        let carRide = document.createElement("option");
-        let pickup = document.createElement("option");
-        let utility = document.createElement("option");
-
-        motorcycle.className = "motorcycle";
-        carRide.className = "carRide";
-        pickup.className = "pickup";
-        utility.className = "utility";
-
-        motorcycle.innerHTML = "Moto";
-        carRide.innerHTML = "Automovel";
-        pickup.innerHTML = "Caminhonete";
-        utility.innerHTML = "Utilitario";
-
-        let not_pay = !estadia.pagamento && board_car && exit_car
-        if(not_pay) {
-            let card_payment = document.createElement("a")
-            card_payment.className = "redirect_confirm_pay"
-            card_payment.innerHTML = '<i class="fa-regular fa-credit-card" ></i>'
-            btn_payment.appendChild(card_payment)
-            card_payment.setAttribute("href", `/pagamentos/novo?estadia_id=${estadia.id}`)
-            btn_action.setAttribute("disabled", "")
-            btn_action.style.cursor = "initial"
-        }
-
-        //se vaga não possui placa cadastrada, add as opcões de plano no select e a função se houver mudança de plano
-        plan_option.appendChild(plan_option_diary);
-        plan_option.appendChild(plan_option_monthly);
-        plan_option.setAttribute("onchange", `handleChangePlan(${index})`);
-
-
-        let type_car = car.tipo
-
-        switch (String(type_car)) {
-            case "Utilitario":
-                utility.setAttribute("selected", "")
-                break;
-            case "Caminhonete":
-                pickup.setAttribute("selected", "")
-                break;
-            case "Automovel":
-                carRide.setAttribute("selected", "")
-                break;
-            case "Moto":
-                motorcycle.setAttribute("selected", "")
-                break
-            default:
-                break;
-        }
-
-        item_type.appendChild(carRide);
-        item_type.appendChild(motorcycle);
-        item_type.appendChild(pickup);
-        item_type.appendChild(utility);
-
-
-
-        //add todos os itens
-        let content_item = document.createElement("li");
-        content_item.appendChild(form);
-        vacancy_list.appendChild(content_item);
-
-        item_color.setAttribute("type", "text");
-
-        //atribui validação para placa
-        item_board.setAttribute("onkeyup", "handleBoard(event)");
-        item_board.setAttribute("onblur", "alertBoard(event)");
-        item_board.setAttribute("maxLength", "7");
-        item_board.setAttribute("title", "");
-
-        //atribui validação para telefone
-        item_phone.setAttribute("type", "tel");
-        item_phone.setAttribute("maxlength", "15");
-        item_phone.setAttribute("onkeyup", "handlePhone(event)");
-
-        //atribui validação para cpf
-        item_cpf.setAttribute("type", "text");
-        item_cpf.setAttribute("maxlength", "14");
-        item_cpf.setAttribute("onkeyup", "handleCpf(event)");
-
-        plan_option_diary.setAttribute("name", "diary");
-        plan_option_monthly.setAttribute("name", "monthly");
-
-        if (!exit_car) {
-            expiration_date.setAttribute("type", "hidden");
-            expiration_date.value = dateFormat;
-        }
-
-        expiration_date.innerHTML = exit_car ? "" : dateFormat;
-
+        return { vaga, estadia, client, car }
     });
+
+    Handlebars.registerHelper('select', function(selected, option) {
+        return (selected == option) ? 'selected="selected"' : '';
+    });
+
+    Handlebars.registerHelper('and', function(...elements) {
+        return elements.every(element => !!element);
+    });
+
+    Handlebars.registerHelper('not', function(value) {
+        return !value;
+    });
+
+    Handlebars.registerHelper('dateFormat', function (value) {
+        let date = value.split("T", 3)[0];
+        date = date.split("-");
+        return `${date[2]}/${date[1]}/${date[0]}`;
+    });
+
+    Handlebars.registerHelper('editable', (estadia)  => {
+        return isManager || !estadia.id
+    });
+
+    var source = $("#estadia-template").html();
+    var template = Handlebars.compile(source);
+    var html = template({items});
+    $(".list-item-set").append(html);
 }
 
 async function submitForm(form) {
+    var data = getData(form);
+
+    if (data.id_estadia) {
+        return await encerrarEstadia(data);
+    } else {
+        return await iniciarEstadia(data);
+    }
+}
+async function encerrarEstadia(data) {
     var token = document.getElementById('_csrf').content;
     var header = document.getElementById('_csrf_header').content;
 
-    await fetch(form.getAttribute('action'), {
-        method: form.getAttribute('method'),
+    var response = await fetch(`/estadias/${data.id_estadia}/encerrar`, {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Accepts': 'application/json',
             [header]: token
         },
         credentials: 'include',
-        body: JSON.stringify(getData(form))
+        body: JSON.stringify()
     })
-    .then((response) => response.json())
-    .then((estadia) => {
-      if(estadia.saida != null) {
+
+    if (response.status === 200) {
+        var estadia = await response.json();
         location.href = `/pagamentos/novo?estadia_id=${estadia.id}`;
-      } else {
-        alert('TODO: tratar retorno da criação de estadias')
-      }
+    } else {
+        let error = await getApiError(response);
+        alert('Erro ' + error);
+    }
+}
+
+async function iniciarEstadia(data) {
+    var token = document.getElementById('_csrf').content;
+    var header = document.getElementById('_csrf_header').content;
+
+    let veiculo
+    try {
+        veiculo = await criaVeiculo(data, {[header]: token});
+        console.log('Veiculo criado / encontrato' + JSON.stringify(veiculo));
+    } catch(e) {
+        return alert('Erro ao criar veículo: ' + e);
+    }
+
+    let cliente
+    try {
+        cliente = await criaCliente({...data, veiculoId: veiculo.id}, {[header]: token});
+        console.log('Cliente criado / encontrato' + JSON.stringify(cliente));
+    } catch(e) {
+        return alert('Erro ao criar cliente: ' + e);
+    }
+
+    let estadia
+    try {
+        estadia = await criaEstadia({...data, clienteId: cliente.id}, {[header]: token});
+        console.log('Estadia criada: ' + JSON.stringify(estadia));
+        alert('Estadia iniciada em: ' + estadia.entrada)
+        location.reload();
+    } catch(e) {
+        return alert('Erro ao criar estadia: ' + e);
+    }
+
+
+}
+
+async function criaVeiculo({ placa, marca, modelo, cor, tipo }, csrfHeader) {
+    response = await fetch(`/veiculos`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accepts': 'application/json',
+            ...csrfHeader
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            placa, marca, modelo, cor, tipo
+        }),
     });
+
+    if (response.status === 200) {
+        return response.json();
+    }
+
+    let error = await getApiError(response);
+    throw error;
+}
+
+async function criaCliente({ nome, cpf, telefone, veiculoId }, csrfHeader) {
+    response = await fetch(`/clientes`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accepts': 'application/json',
+            ...csrfHeader
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            nome, cpf, telefone, veiculoId
+        }),
+    });
+
+    if (response.status === 200) {
+        return response.json();
+    }
+
+    let error = await getApiError(response);
+    throw error;
+}
+
+async function criaEstadia({ vagaId, clienteId, plano }, csrfHeader) {
+    response = await fetch(`/estadias`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accepts': 'application/json',
+            ...csrfHeader
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            vagaId, clienteId, plano
+        }),
+    });
+
+    if (response.status === 200) {
+        return response.json();
+    }
+
+    let error = await getApiError(response);
+    throw error;
+}
+
+async function getApiError(response) {
+    let error = await response.text();
+    try {
+        error = JSON.parse(error);
+        error = error.errors.reduce((acc, error) => error.defaultMessage + ' ', '')
+    } catch(e) {
+        error = error
+    }
+
+    return error;
 }
 
 function getData(form) {
   var formData = new FormData(form);
-  return Object.fromEntries(formData);
+  var data = Object.fromEntries(formData);
+
+  data.cpf = (data.cpf || '').replace(/[ -.()]/g, '')
+  data.placa = (data.placa || '').replace(/[ -.()]/g, '')
+  data.telefone = (data.telefone || '').replace(/[ -.()]/g, '')
+
+  return data;
 }
 
 function formatPlano(plano) {
@@ -567,3 +277,4 @@ function formatPlano(plano) {
     }
     return plano[0].toUpperCase() + plano.slice(1).toLowerCase()
 }
+

@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import bits.estacionamento.entity.TipoVeiculo;
 import bits.estacionamento.entity.Veiculo;
-import bits.estacionamento.exception.VeiculoJaCadastradoException;
 import bits.estacionamento.repository.VeiculosRepository;
 import bits.estacionamento.service.CriarVeiculoService;
 
@@ -18,10 +17,6 @@ public class CriarVeiculoServiceImpl implements CriarVeiculoService {
     @Override
     @Transactional
     public Veiculo perform(String marca, String modelo, String cor, String placa, TipoVeiculo tipo) {
-        if (!repository.findByPlaca(placa).isEmpty()) {
-            throw new VeiculoJaCadastradoException();
-        }
-
         Veiculo veiculo = new Veiculo();
         veiculo.setMarca(marca);
         veiculo.setModelo(modelo);

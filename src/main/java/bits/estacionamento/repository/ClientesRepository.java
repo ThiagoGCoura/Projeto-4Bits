@@ -8,6 +8,4 @@ import bits.estacionamento.entity.Cliente;
 
 public interface ClientesRepository extends CrudRepository<Cliente, Long> {
     Set<Cliente> findByCpfStartsWith(String cpf);
-
-    Set<Cliente> findByCpf(String cpf);
 }
