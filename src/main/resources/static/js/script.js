@@ -252,7 +252,7 @@ async function getApiError(response) {
     let error = await response.text();
     try {
         error = JSON.parse(error);
-        error = error.errors.reduce((acc, error) => error.defaultMessage + ' ', '')
+        error = error.errors?.map((e) => e.defaultMessage).join('. ') || error.message;
     } catch(e) {
         error = error
     }
