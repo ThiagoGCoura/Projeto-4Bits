@@ -69,18 +69,17 @@ const alertBoard = (event) => {
     }
 };
 
-
-function userAtendente(data) {
-    criaLista(data, false);
+function userAtendente(vagas) {
+    exibeVagas(vagas, false);
 }
 
-function userGerente(data) {
-    criaLista(data, true);
+function userGerente(vagas) {
+    exibeVagas(vagas, true);
 }
 
-function criaLista(data, isManager) {
+function exibeVagas(vagas, isManager) {
     //pega o elemento ul para adicionar as vagas
-    const items = data.map((vaga) => {
+    const items = vagas.map((vaga) => {
         const estadia = vaga.estadia || {};
         const client = estadia.cliente || {};
         const car = client.veiculo || {};
@@ -120,12 +119,12 @@ async function submitForm(form) {
     var data = getData(form);
 
     if (data.id_estadia) {
-        return await encerrarEstadia(data);
+        return await encerraEstadia(data);
     } else {
-        return await iniciarEstadia(data);
+        return await iniciaEstadia(data);
     }
 }
-async function encerrarEstadia(data) {
+async function encerraEstadia(data) {
     var token = document.getElementById('_csrf').content;
     var header = document.getElementById('_csrf_header').content;
 
@@ -149,7 +148,7 @@ async function encerrarEstadia(data) {
     }
 }
 
-async function iniciarEstadia(data) {
+async function iniciaEstadia(data) {
     var token = document.getElementById('_csrf').content;
     var header = document.getElementById('_csrf_header').content;
 
@@ -270,11 +269,3 @@ function getData(form) {
 
   return data;
 }
-
-function formatPlano(plano) {
-    if (!plano) {
-        return "";
-    }
-    return plano[0].toUpperCase() + plano.slice(1).toLowerCase()
-}
-
