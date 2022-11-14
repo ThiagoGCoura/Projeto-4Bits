@@ -20,7 +20,7 @@ import bits.estacionamento.utils.DateUtils;
 public class EncerrarEstadiaServiceImpl implements EncerrarEstadiaService {
     private final BigDecimal VALOR_HORA_AVULSO = BigDecimal.valueOf(10.5);
 
-    private final BigDecimal VALOR_DIARIA_MENSAL = BigDecimal.valueOf(8.66);
+    private final BigDecimal VALOR_MENSAL = BigDecimal.valueOf(266.50);
 
     @Autowired
     private EstadiasRepository estadiasRepository;
@@ -52,9 +52,6 @@ public class EncerrarEstadiaServiceImpl implements EncerrarEstadiaService {
     }
 
     private BigDecimal calculaValorMensal(LocalDateTime entrada, LocalDateTime saida) {
-        Duration duration = Duration.between(entrada, saida);
-        long diff = duration.plusDays(1).minusNanos(1).toDays();
-
-        return VALOR_DIARIA_MENSAL.multiply(BigDecimal.valueOf(diff));
+        return VALOR_MENSAL;
     }
 }
