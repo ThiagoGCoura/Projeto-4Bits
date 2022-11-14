@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
 		<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+		<meta id="_user_role" name="_user_role" th:content="${#strings.listJoin(#authentication.getAuthorities(), ',')}"/>
 		<title>Estacionamento</title>
 
 		<link th:href="@{/css/home.css}" rel="stylesheet" />
@@ -196,19 +197,6 @@
 	  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 	  <script th:src="@{/js/script.js}"></script>
 	  <script>
-		let vagas = [];
-
-		async function carregaVagas() {
-			var response = await fetch('/vagas');
-			vagas = await response.json();
-
-			if("[[${#httpServletRequest.remoteUser}]]" == "atendente") {
-				userAtendente(vagas)
-			} else {
-				userGerente(vagas)
-			};
-		}
-
 		$(document).ready(async function() {
 			await carregaVagas();
 		});

@@ -69,15 +69,23 @@ const alertBoard = (event) => {
     }
 };
 
-function userAtendente(vagas) {
-    exibeVagas(vagas, false);
+let vagas = [];
+async function carregaVagas() {
+    var response = await fetch('/vagas');
+    vagas = await response.json();
+
+    return exibeVagas(vagas);
 }
 
-function userGerente(vagas) {
-    exibeVagas(vagas, true);
+function hasRole(role) {
+    let roles = document.getElementById('_user_role').content;
+    roles = roles.split(',');
+    return roles.indexOf(role) !== -1;
 }
 
-function exibeVagas(vagas, isManager) {
+function exibeVagas(vagas) {
+    const isManager = hasRole('MANAGER');
+
     //pega o elemento ul para adicionar as vagas
     const items = vagas.map((vaga) => {
         const estadia = vaga.estadia || {};
