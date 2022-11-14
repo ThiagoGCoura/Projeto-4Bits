@@ -1,10 +1,16 @@
 let car_type = ["Moto", "Carro", "Caminhonete", "Utilitario"];
 
-function searchCar() {
-    const search_board = document.querySelector(".board-car").value;
+function searchCar(event) {
+    event.preventDefault();
 
-    const search_car = document.querySelector(".search-car");
-    search_car.setAttribute("href", `#${search_board}`);
+    const search_board = document.querySelector(".board-car").value;
+    if (search_board){
+        location.hash=`search=${search_board}`;
+        exibeVagas(vagas.filter(v => v.estadia?.cliente?.veiculo?.placa.startsWith(search_board)));
+    } else {
+        location.hash='';
+        exibeVagas(vagas);
+    }
 }
 
 function handleChangePlan(index) {
@@ -120,7 +126,9 @@ function exibeVagas(vagas) {
     var source = $("#estadia-template").html();
     var template = Handlebars.compile(source);
     var html = template({items});
-    $(".list-item-set").append(html);
+    const container = $(".list-item-set");
+    container.empty();
+    container.append(html);
 }
 
 async function submitForm(form) {
