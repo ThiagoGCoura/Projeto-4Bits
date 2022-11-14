@@ -42,6 +42,10 @@
 					<span id="date_expiration"></span>
 				</div>
 				<div class="data_ending">
+					<label for="">Total de horas</label>
+					<span id="duration"></span>
+				</div>
+				<div class="data_ending">
 					<label>Valor</label>
 					<span id="amount"></span>
 				</div>
@@ -97,7 +101,26 @@
 		date_entry.innerHTML = dateFormat_entry
 		date_expiration.innerHTML = dateFormat_exit
 		amount.innerHTML = amount_format
+
+		const duration_field = document.getElementById("duration");
+        duration_field.innerHTML = getDuration(Date.parse(elem.entrada), Date.parse(elem.saida));
 	}
+
+	function getDuration(startDate, endDate) {
+		let duration_hours = String(getHoursDiff(endDate, startDate));
+		let duration_minutes = String(getMinutesDiff(endDate, startDate) % 60);
+		return `${duration_hours.padStart(2, '0')}:${duration_minutes.padStart(2, '0')}`
+	}
+
+	function getHoursDiff(startDate, endDate) {
+		const msInHour = 1000 * 60 * 60;
+		return Math.floor(Math.abs(endDate - startDate) / msInHour);
+	}
+
+	function getMinutesDiff(startDate, endDate) {
+		const msInMinute = 1000 * 60;
+		return Math.ceil(Math.abs(endDate - startDate) / msInMinute);
+        }
 
 	async function submitForm(form) {
 		var token = document.getElementById('_csrf').content;
