@@ -1,5 +1,7 @@
 package bits.estacionamento.service.impl;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,13 +40,10 @@ public class CriarEstadiaServiceImpl implements CriarEstadiaService {
         }
 
         final Cliente cliente = clientesRepository.findById(clientId).orElseThrow(() -> new ClienteNaoEncontradoException());
-        final Estadia estadia = new Estadia();
-        estadia.setCliente(cliente);
-        estadia.setVaga(vaga);
-        estadia.setPlano(plano);
-        estadia.setEntrada(DateUtils.now());
-        estadia.setStatus(EstadiaStatus.ATIVO);
 
+        final LocalDateTime now = DateUtils.now();
+        final Estadia estadia = Estadia.newInstance(now, cliente, vaga, plano, EstadiaStatus.ATIVO);
+        estadia.iniciaEstadia();
         return estadiasRepository.save(estadia);
     }
 }

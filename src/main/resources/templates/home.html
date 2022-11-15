@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
 		<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+		<meta id="_user_role" name="_user_role" th:content="${#strings.listJoin(#authentication.getAuthorities(), ',')}"/>
 		<title>Estacionamento</title>
 
 		<link th:href="@{/css/home.css}" rel="stylesheet" />
@@ -28,16 +29,17 @@
 					</form>
                 </div>
 			</header>
-            <form action="" method=""  class="form-search">
+
+			<div class="form-search">
                 <input class="board-car" type="text" placeholder="Placa do Veiculo para pesquisar" name="veiculo-pesquisar" size="40">
 
-				<a class="search-car" href="" onclick="searchCar()">
+				<a class="search-car" href="" onclick="searchCar(event)">
 					<span class="icon-search" >
 						<i class="fa fa-magnifying-glass"></i>
 					</span>
 				</a>
+            </div>
 
-            </form>
 			<main>
 				<div class="vacancy-list">
 					<ul class="list-title-set">
@@ -52,7 +54,7 @@
 						<li class="title-list title-name">Proprietario</li>
 						<li class="title-list title-phone">Telefone</li>
 						<li class="title-list title-plan">Plano</li>
-						<li class="title-list title-expiration">Saída</li>
+						<li class="title-list title-expiration">Expiração</li>
 						<li class="title-list title-action"></li>
 						<li class="title-list title-pay"></li>
 					</ul>
@@ -87,6 +89,8 @@
 								name="placa"
 								title=""
 								type="text"
+								onkeyup="handleBoard(event)"
+								onblur="alertBoard(event)"
 								value="{{car.placa}}">
 						{{else}}
 							<span
@@ -152,26 +156,26 @@
 						{{/if}}
 
 						<div class="item-list item-expiration">
-							{{#if estadia.saida}}
+							{{#if estadia.expiracao}}
 							<input
 								class="end-date mensal"
 								name="frm_expiration"
 								{{#unless estadia.pagamento}}id="not_pay"{{/unless}}
-								value="{{{dateFormat estadia.saida}}}">
+								value="{{{dateFormat estadia.expiracao}}}">
 							{{/if}}
 						</div>
 
 						<div class="item-list item-action">
 							<button
 								type="submit"
-								class="btn btn_action {{#if car.placa}}btn-add{{else}}btn-close{{/if}}"
-								{{#if estadia.saida}}
+								class="btn btn_action {{#if car.placa}}btn-close{{else}}btn-add{{/if}}"
+								{{#if (pedingPayment estadia)}}
 									id="missing-payment"
 									disabled
 									title="⚠️ Validar pagamento"
 									style="cursor: initial;"
 								{{/if}}>
-									{{#if car.placa}}
+									{{#if estadia.id}}
 										Finalizar
 									{{else}}
 										Cadastrar
@@ -180,7 +184,7 @@
 						</div>
 
 						<div class="item-list item-payment">
-							{{#if (and car.placa (not estadia.pagamento) estadia.saida)}}
+							{{#if (pedingPayment estadia)}}
 								<a class="redirect_confirm_pay" href="/pagamentos/novo?estadia_id={{estadia.id}}">
 									<i class="fa-regular fa-credit-card"></i>
 								</a>
@@ -194,19 +198,8 @@
 	  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 	  <script th:src="@{/js/script.js}"></script>
 	  <script>
-		async function showVacancy() {
-			var response = await fetch('/vagas');
-			var data = await response.json();
-
-			if("[[${#httpServletRequest.remoteUser}]]" == "atendente") {
-				userAtendente(data)
-			} else {
-				userGerente(data)
-			};
-		}
-
-		$( document ).ready(async function() {
-			await showVacancy();
+		$(document).ready(async function() {
+			await carregaVagas();
 		});
 	  </script>
 </html>

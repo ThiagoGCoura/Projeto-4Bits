@@ -38,7 +38,7 @@
 					<span id="date_entry"></span>
 				</div>
 				<div class="data_ending">
-					<label for="">Data Saída</label>
+					<label for="">Data de Expiração</label>
 					<span id="date_expiration"></span>
 				</div>
 				<div class="data_ending">
@@ -82,7 +82,7 @@
 		let dateFormat_entry = `${day_entry}/${month_entry}/${year_entry}`;
 
 		//formata a data de saida
-		let date_exit_car = String(elem.saida).split("T", 3);
+		let date_exit_car = String(elem.expiracao).split("T", 3);
 		let date_exit_separator = date_exit_car[0].split("-");
 		let day_exit = date_exit_separator[2];
 		let month_exit = date_exit_separator[1];

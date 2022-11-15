@@ -1,10 +1,16 @@
 let car_type = ["Moto", "Carro", "Caminhonete", "Utilitario"];
 
-function searchCar() {
-    const search_board = document.querySelector(".board-car").value;
+function searchCar(event) {
+    event.preventDefault();
 
-    const search_car = document.querySelector(".search-car");
-    search_car.setAttribute("href", `#${search_board}`);
+    const search_board = document.querySelector(".board-car").value;
+    if (search_board){
+        location.hash=`search=${search_board}`;
+        exibeVagas(vagas.filter(v => v.estadia?.cliente?.veiculo?.placa.startsWith(search_board)));
+    } else {
+        location.hash='';
+        exibeVagas(vagas);
+    }
 }
 
 function handleChangePlan(index) {
@@ -69,18 +75,25 @@ const alertBoard = (event) => {
     }
 };
 
+let vagas = [];
+async function carregaVagas() {
+    var response = await fetch('/vagas');
+    vagas = await response.json();
 
-function userAtendente(data) {
-    criaLista(data, false);
+    return exibeVagas(vagas);
 }
 
-function userGerente(data) {
-    criaLista(data, true);
+function hasRole(role) {
+    let roles = document.getElementById('_user_role').content;
+    roles = roles.split(',');
+    return roles.indexOf(role) !== -1;
 }
 
-function criaLista(data, isManager) {
+function exibeVagas(vagas) {
+    const isManager = hasRole('MANAGER');
+
     //pega o elemento ul para adicionar as vagas
-    const items = data.map((vaga) => {
+    const items = vagas.map((vaga) => {
         const estadia = vaga.estadia || {};
         const client = estadia.cliente || {};
         const car = client.veiculo || {};
@@ -90,6 +103,10 @@ function criaLista(data, isManager) {
 
     Handlebars.registerHelper('select', function(selected, option) {
         return (selected == option) ? 'selected="selected"' : '';
+    });
+
+    Handlebars.registerHelper('equals', function(arg1, arg2) {
+        return arg1 == arg2;
     });
 
     Handlebars.registerHelper('and', function(...elements) {
@@ -110,22 +127,28 @@ function criaLista(data, isManager) {
         return isManager || !estadia.id
     });
 
+    Handlebars.registerHelper('pedingPayment', function(estadia) {
+        return (!!estadia.expiracao && !estadia.pagamento) || (!!estadia.saida && !estadia.pagamento)
+    });
+
     var source = $("#estadia-template").html();
     var template = Handlebars.compile(source);
     var html = template({items});
-    $(".list-item-set").append(html);
+    const container = $(".list-item-set");
+    container.empty();
+    container.append(html);
 }
 
 async function submitForm(form) {
     var data = getData(form);
 
     if (data.id_estadia) {
-        return await encerrarEstadia(data);
+        return await encerraEstadia(data);
     } else {
-        return await iniciarEstadia(data);
+        return await iniciaEstadia(data);
     }
 }
-async function encerrarEstadia(data) {
+async function encerraEstadia(data) {
     var token = document.getElementById('_csrf').content;
     var header = document.getElementById('_csrf_header').content;
 
@@ -142,14 +165,19 @@ async function encerrarEstadia(data) {
 
     if (response.status === 200) {
         var estadia = await response.json();
-        location.href = `/pagamentos/novo?estadia_id=${estadia.id}`;
+        if (estadia.status === "INATIVO") {
+            alert(`Estadia encerrada. Total de horas: ${getDuration(Date.parse(estadia.entrada), Date.parse(estadia.saida))}`)
+            location.reload();
+        } else {
+            location.href = `/pagamentos/novo?estadia_id=${estadia.id}`;
+        }
     } else {
         let error = await getApiError(response);
         alert('Erro ' + error);
     }
 }
 
-async function iniciarEstadia(data) {
+async function iniciaEstadia(data) {
     var token = document.getElementById('_csrf').content;
     var header = document.getElementById('_csrf_header').content;
 
@@ -252,7 +280,7 @@ async function getApiError(response) {
     let error = await response.text();
     try {
         error = JSON.parse(error);
-        error = error.errors.reduce((acc, error) => error.defaultMessage + ' ', '')
+        error = error.errors?.map((e) => e.defaultMessage).join('. ') || error.message;
     } catch(e) {
         error = error
     }
@@ -271,10 +299,18 @@ function getData(form) {
   return data;
 }
 
-function formatPlano(plano) {
-    if (!plano) {
-        return "";
-    }
-    return plano[0].toUpperCase() + plano.slice(1).toLowerCase()
+function getDuration(startDate, endDate) {
+    let duration_hours = String(getHoursDiff(endDate, startDate));
+    let duration_minutes = String(getMinutesDiff(endDate, startDate) % 60);
+    return `${duration_hours.padStart(2, '0')}:${duration_minutes.padStart(2, '0')}`
 }
 
+function getHoursDiff(startDate, endDate) {
+    const msInHour = 1000 * 60 * 60;
+    return Math.floor(Math.abs(endDate - startDate) / msInHour);
+}
+
+function getMinutesDiff(startDate, endDate) {
+    const msInMinute = 1000 * 60;
+    return Math.ceil(Math.abs(endDate - startDate) / msInMinute);
+}
