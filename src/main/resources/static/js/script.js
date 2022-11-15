@@ -105,6 +105,10 @@ function exibeVagas(vagas) {
         return (selected == option) ? 'selected="selected"' : '';
     });
 
+    Handlebars.registerHelper('equals', function(arg1, arg2) {
+        return arg1 == arg2;
+    });
+
     Handlebars.registerHelper('and', function(...elements) {
         return elements.every(element => !!element);
     });
@@ -121,6 +125,10 @@ function exibeVagas(vagas) {
 
     Handlebars.registerHelper('editable', (estadia)  => {
         return isManager || !estadia.id
+    });
+
+    Handlebars.registerHelper('pedingPayment', function(estadia) {
+        return (!!estadia.expiracao && !estadia.pagamento) || (!!estadia.saida && !estadia.pagamento)
     });
 
     var source = $("#estadia-template").html();
@@ -157,7 +165,12 @@ async function encerraEstadia(data) {
 
     if (response.status === 200) {
         var estadia = await response.json();
-        location.href = `/pagamentos/novo?estadia_id=${estadia.id}`;
+        if (estadia.status === "INATIVO") {
+            alert(`Estadia encerrada. Total de horas: ${getDuration(Date.parse(estadia.entrada), Date.parse(estadia.saida))}`)
+            location.reload();
+        } else {
+            location.href = `/pagamentos/novo?estadia_id=${estadia.id}`;
+        }
     } else {
         let error = await getApiError(response);
         alert('Erro ' + error);
@@ -284,4 +297,20 @@ function getData(form) {
   data.telefone = (data.telefone || '').replace(/[ -.()]/g, '')
 
   return data;
+}
+
+function getDuration(startDate, endDate) {
+    let duration_hours = String(getHoursDiff(endDate, startDate));
+    let duration_minutes = String(getMinutesDiff(endDate, startDate) % 60);
+    return `${duration_hours.padStart(2, '0')}:${duration_minutes.padStart(2, '0')}`
+}
+
+function getHoursDiff(startDate, endDate) {
+    const msInHour = 1000 * 60 * 60;
+    return Math.floor(Math.abs(endDate - startDate) / msInHour);
+}
+
+function getMinutesDiff(startDate, endDate) {
+    const msInMinute = 1000 * 60;
+    return Math.ceil(Math.abs(endDate - startDate) / msInMinute);
 }

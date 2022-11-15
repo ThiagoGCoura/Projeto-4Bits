@@ -136,3 +136,7 @@ foreign key (id_pagamento) references pagamento(id_pagamento);
 -- rollback alter table estadia drop foreign key estadia_pagamento_fk;
 -- rollback alter table estadia drop column id_pagamento;
 -- rollback drop table pagamento;
+
+-- changeset 0811.theodoro:"adiciona coluna expiração à tabela estadia"
+alter table estadia add column expiracao DATETIME;
+-- rollback alter table estadia drop column expiracao;

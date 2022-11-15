@@ -54,7 +54,7 @@
 						<li class="title-list title-name">Proprietario</li>
 						<li class="title-list title-phone">Telefone</li>
 						<li class="title-list title-plan">Plano</li>
-						<li class="title-list title-expiration">Saída</li>
+						<li class="title-list title-expiration">Expiração</li>
 						<li class="title-list title-action"></li>
 						<li class="title-list title-pay"></li>
 					</ul>
@@ -156,12 +156,12 @@
 						{{/if}}
 
 						<div class="item-list item-expiration">
-							{{#if estadia.saida}}
+							{{#if estadia.expiracao}}
 							<input
 								class="end-date mensal"
 								name="frm_expiration"
 								{{#unless estadia.pagamento}}id="not_pay"{{/unless}}
-								value="{{{dateFormat estadia.saida}}}">
+								value="{{{dateFormat estadia.expiracao}}}">
 							{{/if}}
 						</div>
 
@@ -169,13 +169,13 @@
 							<button
 								type="submit"
 								class="btn btn_action {{#if car.placa}}btn-close{{else}}btn-add{{/if}}"
-								{{#if estadia.saida}}
+								{{#if (pedingPayment estadia)}}
 									id="missing-payment"
 									disabled
 									title="⚠️ Validar pagamento"
 									style="cursor: initial;"
 								{{/if}}>
-									{{#if car.placa}}
+									{{#if estadia.id}}
 										Finalizar
 									{{else}}
 										Cadastrar
@@ -184,7 +184,7 @@
 						</div>
 
 						<div class="item-list item-payment">
-							{{#if (and car.placa (not estadia.pagamento) estadia.saida)}}
+							{{#if (pedingPayment estadia)}}
 								<a class="redirect_confirm_pay" href="/pagamentos/novo?estadia_id={{estadia.id}}">
 									<i class="fa-regular fa-credit-card"></i>
 								</a>
