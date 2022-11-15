@@ -38,12 +38,8 @@
 					<span id="date_entry"></span>
 				</div>
 				<div class="data_ending">
-					<label for="">Data Saída</label>
+					<label for="">Data de Expiração</label>
 					<span id="date_expiration"></span>
-				</div>
-				<div class="data_ending">
-					<label for="">Total de horas</label>
-					<span id="duration"></span>
 				</div>
 				<div class="data_ending">
 					<label>Valor</label>
@@ -86,7 +82,7 @@
 		let dateFormat_entry = `${day_entry}/${month_entry}/${year_entry}`;
 
 		//formata a data de saida
-		let date_exit_car = String(elem.saida).split("T", 3);
+		let date_exit_car = String(elem.expiracao).split("T", 3);
 		let date_exit_separator = date_exit_car[0].split("-");
 		let day_exit = date_exit_separator[2];
 		let month_exit = date_exit_separator[1];
@@ -101,26 +97,7 @@
 		date_entry.innerHTML = dateFormat_entry
 		date_expiration.innerHTML = dateFormat_exit
 		amount.innerHTML = amount_format
-
-		const duration_field = document.getElementById("duration");
-        duration_field.innerHTML = getDuration(Date.parse(elem.entrada), Date.parse(elem.saida));
 	}
-
-	function getDuration(startDate, endDate) {
-		let duration_hours = String(getHoursDiff(endDate, startDate));
-		let duration_minutes = String(getMinutesDiff(endDate, startDate) % 60);
-		return `${duration_hours.padStart(2, '0')}:${duration_minutes.padStart(2, '0')}`
-	}
-
-	function getHoursDiff(startDate, endDate) {
-		const msInHour = 1000 * 60 * 60;
-		return Math.floor(Math.abs(endDate - startDate) / msInHour);
-	}
-
-	function getMinutesDiff(startDate, endDate) {
-		const msInMinute = 1000 * 60;
-		return Math.ceil(Math.abs(endDate - startDate) / msInMinute);
-        }
 
 	async function submitForm(form) {
 		var token = document.getElementById('_csrf').content;
