@@ -158,6 +158,18 @@ body {
 	color:#2aca2a;
 }
 
+.item-expira {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FDD1D6;
+    color: #991111;
+}
+
+.fa-credit-card {
+    color: #991111 !important;
+}
+
 .item-list .empty{
 	width: 12px;
 	height: 12px;
@@ -195,7 +207,7 @@ body {
 }
 
 .item-model, .title-model,
-.item-expiration, .title-expiration{
+.item-expiration, .title-expiration, .item-expira{
 	max-width: 120px;
 }
 
@@ -273,7 +285,7 @@ input.end-date{
 	color: #007119;
 }
 
-.btn.btn-add#missing-payment {
+#missing-payment {
 	background: #cfcfcf;
 	color: #8F8F8F;
 }

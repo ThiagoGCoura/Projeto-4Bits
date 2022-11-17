@@ -56,7 +56,6 @@
 						<li class="title-list title-plan">Plano</li>
 						<li class="title-list title-expiration">Expiração</li>
 						<li class="title-list title-action"></li>
-						<li class="title-list title-pay"></li>
 					</ul>
 					<div>
 						<ul class="list-item-set">
@@ -155,13 +154,19 @@
 							<span class="item-list item-plan" name="plano">{{estadia.plano}}</span>
 						{{/if}}
 
-						<div class="item-list item-expiration">
+
+						<div {{#if (pedingPayment estadia)}}class="item-list item-expira"{{else}}class="item-list item-expiration"{{/if}}>
 							{{#if estadia.expiracao}}
 							<input
 								class="end-date mensal"
 								name="frm_expiration"
 								{{#unless estadia.pagamento}}id="not_pay"{{/unless}}
 								value="{{{dateFormat estadia.expiracao}}}">
+								{{#if (pedingPayment estadia)}}
+									<a class="redirect_confirm_pay" href="/pagamentos/novo?estadia_id={{estadia.id}}">
+										<i class="fa-regular fa-credit-card"></i>
+									</a>
+								{{/if}}
 							{{/if}}
 						</div>
 
@@ -182,14 +187,6 @@
 									{{/if}}
 							</button>
 						</div>
-
-						<div class="item-list item-payment">
-							{{#if (pedingPayment estadia)}}
-								<a class="redirect_confirm_pay" href="/pagamentos/novo?estadia_id={{estadia.id}}">
-									<i class="fa-regular fa-credit-card"></i>
-								</a>
-							{{/if}}
-					</div>
 				</form>
 			</li>
 		{{/each}}
