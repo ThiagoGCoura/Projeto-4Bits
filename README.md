@@ -38,7 +38,7 @@ A senha de acessso do usuário
 
 Em desenvolvimento, você pode executar uma base de dados instalando a versão 5.7 do MySQL server.
 Neste repositório, disponibilizamos ainda um arquivo `docker compose` que nos permite executar um instância de MySQL sem que seja necessário instalá-lo em nosso computador.
-Para iniciá-lo, é precio ter `Docker` e `Docker Compose` instalado em seu computador e emitir o seguinte comando a partir da raiz do projeto:
+Para iniciá-lo, é preciso ter `Docker` e `Docker Compose` instalado em seu computador e emitir o seguinte comando a partir da raiz do projeto:
 
 <code>
 $ docker compose up -d
